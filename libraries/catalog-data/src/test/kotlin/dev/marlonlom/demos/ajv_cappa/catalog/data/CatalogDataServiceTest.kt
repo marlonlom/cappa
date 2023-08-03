@@ -21,9 +21,11 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.data
 
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -68,14 +70,15 @@ internal class CatalogDataServiceTest {
   @Test
   fun shouldValidateExpectedCatalogItemNotExist() {
     val expectedItem = CatalogItem(
-      id = 15396L,
+      id = 19396L,
       title = "None",
       picture = "https://nopic.com/img/null.jpg",
       punctuations = listOf()
     )
     val list = catalogResponse.successOr(emptyList())
-    val foundItem = list.single { it.id == 15396L }
-    assertNotNull(foundItem)
+    val foundItem = list.find { it.id == expectedItem.id }
+    assertNotNull(list)
+    assertNull(foundItem)
     assertNotEquals(expectedItem, foundItem)
   }
 
