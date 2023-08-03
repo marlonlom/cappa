@@ -75,6 +75,8 @@ android {
 
 dependencies {
 
+  implementation(project(":libraries:catalog-data"))
+
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)
   androidTestImplementation(composeBom)
