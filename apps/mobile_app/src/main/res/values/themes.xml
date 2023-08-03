@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2023 Marlonlom
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
@@ -22,5 +21,5 @@
 
 <resources>
 
-    <style name="Theme.Cappa" parent="android:Theme.Material.Light.NoActionBar" />
+  <style name="Theme.Cappa" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
