@@ -28,7 +28,6 @@ import dev.marlonlom.demos.ajv_cappa.catalog.data.Response
 import dev.marlonlom.demos.ajv_cappa.catalog.data.successOr
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
