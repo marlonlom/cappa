@@ -22,11 +22,33 @@
 package dev.marlonlom.demos.ajv_cappa.catalog.data
 
 import kotlinx.serialization.json.Json
+import java.io.InputStream
 
-object CatalogDataService {
 
-  val fetchData: () -> List<CatalogItem> = {
-    val readText = this.javaClass.classLoader.getResourceAsStream("catalog.json")!!.bufferedReader().readText()
-    Json.decodeFromString(readText)
+class CatalogDataService {
+
+  private var catalogJsonPath = CATALOG_JSON_FILENAME
+  internal fun changePath(jsonPath: String) {
+    catalogJsonPath = jsonPath
+  }
+
+  fun fetchData(): Response<List<CatalogItem>> {
+    return try {
+      val readText =
+        getJsonResourceAsStream()?.bufferedReader()?.readText()
+          ?: return Response.Failure(CatalogDataNotFoundException())
+      Response.Success(Json.decodeFromString(readText))
+    } catch (exception: RuntimeException) {
+      Response.Failure(CatalogDataSerializationException(exception))
+    }
+  }
+
+  private fun getJsonResourceAsStream(): InputStream? = this.javaClass.classLoader.getResourceAsStream(catalogJsonPath)
+
+  companion object {
+    private const val CATALOG_JSON_FILENAME = "catalog.json"
   }
 }
+
+class CatalogDataNotFoundException : RuntimeException()
+class CatalogDataSerializationException(cause: Throwable) : RuntimeException(cause)
