@@ -13,6 +13,7 @@ timber = "com.jakewharton.timber:timber:5.0.1"
 
 # test-implementation
 junit = "junit:junit:4.13.2"
+kotlinx-coroutines-test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
 
 # android-test-implementation
 androidx-test-ext-junit = "androidx.test.ext:junit:1.1.5"
