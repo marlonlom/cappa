@@ -19,23 +19,20 @@
  * under the License.
  */
 
-pluginManagement {
-  repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-}
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-  @Suppress("UnstableApiUsage")
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-  repositories {
-    google()
-    mavenCentral()
-  }
-}
+package dev.marlonlom.demos.ajv_cappa.catalog.data
 
-rootProject.name = "cappa"
-include(":apps:mobile_app")
-include(":libraries:catalog-data")
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CatalogItem(
+  val id: Long,
+  val title: String,
+  val picture: String,
+  val punctuations: List<Punctuations>
+)
+
+@Serializable
+data class Punctuations(
+  val label: String,
+  val pointsQty: Int
+)

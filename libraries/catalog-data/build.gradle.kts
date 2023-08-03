@@ -19,23 +19,19 @@
  * under the License.
  */
 
-pluginManagement {
-  repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-}
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-  @Suppress("UnstableApiUsage")
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-  repositories {
-    google()
-    mavenCentral()
-  }
+@Suppress("DSL_SCOPE_VIOLATION")
+plugins {
+  id("java-library")
+  alias(libs.plugins.kotlin.jvm)
+  id("kotlinx-serialization")
 }
 
-rootProject.name = "cappa"
-include(":apps:mobile_app")
-include(":libraries:catalog-data")
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+  implementation(libs.kotlinx.serialization.json)
+  testImplementation(libs.junit)
+}

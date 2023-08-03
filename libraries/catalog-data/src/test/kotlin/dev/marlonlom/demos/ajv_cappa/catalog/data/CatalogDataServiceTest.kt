@@ -19,23 +19,18 @@
  * under the License.
  */
 
-pluginManagement {
-  repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-}
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-  @Suppress("UnstableApiUsage")
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-  repositories {
-    google()
-    mavenCentral()
-  }
-}
+package dev.marlonlom.demos.ajv_cappa.catalog.data
 
-rootProject.name = "cappa"
-include(":apps:mobile_app")
-include(":libraries:catalog-data")
+import org.junit.Assert
+import org.junit.Test
+
+class CatalogDataServiceTest {
+
+  @Test
+  fun shouldFetchData() {
+    val catalogItems = CatalogDataService.fetchData()
+    Assert.assertNotNull(catalogItems)
+    Assert.assertEquals(62, catalogItems.size)
+  }
+
+}
