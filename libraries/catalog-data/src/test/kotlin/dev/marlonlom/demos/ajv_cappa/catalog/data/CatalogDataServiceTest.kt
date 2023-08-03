@@ -24,23 +24,25 @@ package dev.marlonlom.demos.ajv_cappa.catalog.data
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+internal class CatalogDataServiceTest {
 
-class CatalogDataServiceTest {
-
-  private lateinit var catalogItems: List<CatalogItem>
+  private lateinit var catalogResponse: Response<List<CatalogItem>>
 
   @Before
   fun init() {
-    catalogItems = CatalogDataService.fetchData()
+    catalogResponse = CatalogDataService().fetchData()
   }
 
   @Test
   fun shouldValidateCatalogDataIsNotEmpty() {
-    assertNotNull(catalogItems)
-    assertEquals(62, catalogItems.size)
+    val list = catalogResponse.successOr(emptyList())
+    assertTrue(catalogResponse is Response.Success)
+    assertTrue(list.isNotEmpty())
+    assertEquals(62, list.size)
   }
 
   @Test
@@ -56,7 +58,9 @@ class CatalogDataServiceTest {
         )
       )
     )
-    val foundItem = catalogItems.single { it.id == 15396L }
+    val list = catalogResponse.successOr(emptyList())
+    val foundItem = list.single { it.id == 15396L }
+    assertTrue(catalogResponse is Response.Success)
     assertNotNull(foundItem)
     assertEquals(expectedItem, foundItem)
   }
@@ -69,9 +73,30 @@ class CatalogDataServiceTest {
       picture = "https://nopic.com/img/null.jpg",
       punctuations = listOf()
     )
-    val foundItem = catalogItems.single { it.id == 15396L }
+    val list = catalogResponse.successOr(emptyList())
+    val foundItem = list.single { it.id == 15396L }
     assertNotNull(foundItem)
     assertNotEquals(expectedItem, foundItem)
+  }
+
+  @Test
+  fun shouldValidateErrorFetchingWrongJsonData() {
+    val service = CatalogDataService()
+    service.changePath("none.json")
+    catalogResponse = service.fetchData()
+    assertTrue(catalogResponse is Response.Failure)
+    assertNotNull(catalogResponse.failure())
+    assertTrue(catalogResponse.failure() is CatalogDataNotFoundException)
+  }
+
+  @Test
+  fun shouldValidateErrorWhileSerializingJsonData() {
+    val service = CatalogDataService()
+    service.changePath("catalog-single.json")
+    catalogResponse = service.fetchData()
+    assertTrue(catalogResponse is Response.Failure)
+    assertNotNull(catalogResponse.failure())
+    assertTrue(catalogResponse.failure() is CatalogDataSerializationException)
   }
 
 }
