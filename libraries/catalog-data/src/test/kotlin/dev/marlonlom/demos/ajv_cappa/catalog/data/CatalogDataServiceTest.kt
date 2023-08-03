@@ -56,7 +56,7 @@ class CatalogDataServiceTest {
         )
       )
     )
-    val foundItem = catalogItems.find { it.id == 15396L }
+    val foundItem = catalogItems.single { it.id == 15396L }
     assertNotNull(foundItem)
     assertEquals(expectedItem, foundItem)
   }
@@ -69,7 +69,7 @@ class CatalogDataServiceTest {
       picture = "https://nopic.com/img/null.jpg",
       punctuations = listOf()
     )
-    val foundItem = catalogItems.find { it.id == 15396L }
+    val foundItem = catalogItems.single { it.id == 15396L }
     assertNotNull(foundItem)
     assertNotEquals(expectedItem, foundItem)
   }
