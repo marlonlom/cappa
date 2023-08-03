@@ -1,8 +1,9 @@
 # ajv-cappa
 
 ![License](https://img.shields.io/github/license/marlonlom/ajv-cappa)
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/marlonlom/ajv-cappa/main)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/marlonlom/ajv-cappa/build.yml)
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/marlonlom/ajv-cappa/main)
+
 
 Demo android application for showcasing points catalog for "Amigos Juan Valdez" program.
 
