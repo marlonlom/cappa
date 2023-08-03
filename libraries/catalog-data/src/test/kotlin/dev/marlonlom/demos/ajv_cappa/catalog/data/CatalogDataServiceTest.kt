@@ -21,16 +21,57 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.data
 
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Before
 import org.junit.Test
+
 
 class CatalogDataServiceTest {
 
+  private lateinit var catalogItems: List<CatalogItem>
+
+  @Before
+  fun init() {
+    catalogItems = CatalogDataService.fetchData()
+  }
+
   @Test
-  fun shouldFetchData() {
-    val catalogItems = CatalogDataService.fetchData()
-    Assert.assertNotNull(catalogItems)
-    Assert.assertEquals(62, catalogItems.size)
+  fun shouldValidateCatalogDataIsNotEmpty() {
+    assertNotNull(catalogItems)
+    assertEquals(62, catalogItems.size)
+  }
+
+  @Test
+  fun shouldValidateExpectedCatalogItemExist() {
+    val expectedItem = CatalogItem(
+      id = 15396L,
+      title = "Granizado",
+      picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
+      punctuations = listOf(
+        Punctuations(
+          label = "Mediano",
+          pointsQty = 2225
+        )
+      )
+    )
+    val foundItem = catalogItems.find { it.id == 15396L }
+    assertNotNull(foundItem)
+    assertEquals(expectedItem, foundItem)
+  }
+
+  @Test
+  fun shouldValidateExpectedCatalogItemNotExist() {
+    val expectedItem = CatalogItem(
+      id = 15396L,
+      title = "None",
+      picture = "https://nopic.com/img/null.jpg",
+      punctuations = listOf()
+    )
+    val foundItem = catalogItems.find { it.id == 15396L }
+    assertNotNull(foundItem)
+    assertNotEquals(expectedItem, foundItem)
   }
 
 }
