@@ -53,13 +53,19 @@ private val brandDarkColorScheme = darkColorScheme(
 private val brandLightColorScheme = lightColorScheme(
   primary = PapayaWhip40,
   onPrimary = Color.Black,
+  primaryContainer = PapayaWhip40,
+  onPrimaryContainer = Melon10,
   secondary = Melon40,
   onSecondary = Color.Black,
+  secondaryContainer = Melon90,
+  onSecondaryContainer = Melon10,
   tertiary = MonaLisa40,
   background = Bone40,
   onBackground = BlackRussian40,
   surface = Bone40,
-  onSurface = BlackRussian40
+  onSurface = BlackRussian40,
+  surfaceVariant = Bone80,
+  onSurfaceVariant = Color.White
 
   /* Other default colors to override
   background = Color(0xFFFFFBFE),

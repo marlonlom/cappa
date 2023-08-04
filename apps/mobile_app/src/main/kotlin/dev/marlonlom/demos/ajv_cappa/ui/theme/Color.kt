@@ -30,6 +30,8 @@ val Bone80 = Color(0xFF413934)
 
 val PapayaWhip40 = Color(0xFFFFEADC)
 val Melon40 = Color(0xFFFDAFAF)
+val Melon90 = Color(0xFFF9DBDA)
+val Melon10 = Color(0xFF3A060B)
 val MonaLisa40 = Color(0xFFFF8989)
 val Bone40 = Color(0xFFD9BFAE)
 val BlackRussian40 = Color(0xFF1C1B1F)
