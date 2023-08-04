@@ -24,12 +24,15 @@ package dev.marlonlom.demos.ajv_cappa.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import dev.marlonlom.demos.ajv_cappa.R
 
 /**
@@ -61,6 +64,19 @@ sealed class Destination(
     title = R.string.destination_settings,
     icon = Icons.Rounded.Settings
   )
+
+  object Detail : Destination(
+    route = "detail",
+    title = R.string.destination_settings,
+    icon = Icons.Rounded.Info
+  ) {
+    const val itemIdArg = "itemId"
+    val routeWithArg: String = "$route/{$itemIdArg}"
+
+    fun getItemRouteWithId(itemId: Long) = "$route/$itemId"
+
+    val arguments = listOf(navArgument(itemIdArg) { type = NavType.StringType })
+  }
 
   companion object {
     fun listOf() = listOf(Home, Search, Settings)
@@ -99,9 +115,19 @@ class AppNavigationActions(private val navController: NavHostController) {
    *
    */
   fun navigateToAbout() {
-    navController.navigate(route = Destination.Settings.route) {
+    navController.navigate(route = Destination.Detail.route) {
       useDefaultNavOptions(navController)
     }
+  }
+
+
+  /**
+   * Action for navigation to Detail destination
+   *
+   * @param itemRouteWithId detail route using selected item id
+   */
+  fun navigateToDetail(itemRouteWithId: String) {
+    navController.navigate(route = itemRouteWithId)
   }
 
   private fun NavOptionsBuilder.useDefaultNavOptions(navController: NavHostController) {
@@ -111,4 +137,5 @@ class AppNavigationActions(private val navController: NavHostController) {
     launchSingleTop = true
     restoreState = true
   }
+
 }

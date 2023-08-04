@@ -29,6 +29,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailRoute
+import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
 import dev.marlonlom.demos.ajv_cappa.ui.home.HomeViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
@@ -37,7 +39,8 @@ import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
 fun NavigationHost(
   navController: NavHostController,
   paddingValues: PaddingValues,
-  windowSizeClass: WindowSizeClass
+  windowSizeClass: WindowSizeClass,
+  navigateToProductDetailRoute: (Long) -> Unit
 ) {
   NavHost(
     navController = navController,
@@ -52,9 +55,32 @@ fun NavigationHost(
       HomeRoute(
         paddingValues = paddingValues,
         windowSizeClass = windowSizeClass,
-        viewModel = homeViewModel
+        viewModel = homeViewModel,
+        navigateToProductDetailRoute = navigateToProductDetailRoute
       )
     }
+
+    composable(
+      route = Destination.Detail.routeWithArg,
+      arguments = Destination.Detail.arguments
+    ) { navBackStackEntry ->
+      val catalogItemId = navBackStackEntry.arguments!!.getLong(Destination.Detail.itemIdArg)
+
+      val detailViewModel: DetailViewModel = viewModel(
+        factory = DetailViewModel.provideFactory(
+          catalogItemId = catalogItemId,
+          dataService = CatalogDataService()
+        )
+      )
+
+      DetailRoute(
+        catalogItemId = catalogItemId,
+        paddingValues = paddingValues,
+        windowSizeClass = windowSizeClass,
+        viewModel = detailViewModel
+      )
+    }
+
     composable(Destination.Settings.route) {
       SettingsRoute(
         paddingValues = paddingValues
