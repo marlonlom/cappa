@@ -19,9 +19,8 @@
  * under the License.
  */
 
-package dev.marlonlom.demos.ajv_cappa.catalog.data
+package dev.marlonlom.demos.ajv_cappa.main.data
 
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
