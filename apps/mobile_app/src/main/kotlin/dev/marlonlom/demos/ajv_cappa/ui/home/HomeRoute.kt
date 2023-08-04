@@ -21,30 +21,38 @@
 
 package dev.marlonlom.demos.ajv_cappa.ui.home
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.marlonlom.demos.ajv_cappa.main.data.Response
 
 @Composable
-fun HomeRoute(paddingValues: PaddingValues) {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(paddingValues)
-  ) {
-    Text(
-      text = "Hola mundo",
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(20.dp),
-      style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
-    )
+fun HomeRoute(
+  paddingValues: PaddingValues,
+  windowSizeClass: WindowSizeClass,
+  viewModel: HomeViewModel
+) {
+  val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+  when (uiState.value) {
+    is Response.Success -> {
+      val catalogItems = (uiState.value as Response.Success).data
+      when {
+        catalogItems.isEmpty() -> {
+          TODO()
+        }
+
+        else -> {
+          LazyCatalogGrid(
+            paddingValues = paddingValues,
+            windowSizeClass = windowSizeClass,
+            catalogItems = catalogItems
+          )
+        }
+      }
+    }
+
+    is Response.Failure -> TODO()
   }
 }

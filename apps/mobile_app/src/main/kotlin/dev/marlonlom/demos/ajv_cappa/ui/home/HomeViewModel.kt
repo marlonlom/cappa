@@ -22,6 +22,7 @@
 package dev.marlonlom.demos.ajv_cappa.ui.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
@@ -53,6 +54,20 @@ class HomeViewModel(
       val response: Response<List<CatalogItem>> = dataService.fetchData()
       viewModelState.update {
         response
+      }
+    }
+  }
+
+  /**
+   * Factory for HomeViewModel that takes CatalogDataService as a dependency
+   */
+  companion object {
+    fun provideFactory(
+      dataService: CatalogDataService
+    ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+      @Suppress("UNCHECKED_CAST")
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return HomeViewModel(dataService) as T
       }
     }
   }
