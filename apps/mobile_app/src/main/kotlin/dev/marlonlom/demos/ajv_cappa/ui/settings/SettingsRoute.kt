@@ -19,30 +19,34 @@
  * under the License.
  */
 
-package dev.marlonlom.demos.ajv_cappa.ui.navigation
+package dev.marlonlom.demos.ajv_cappa.ui.settings
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
-import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun NavigationHost(
-  navController: NavHostController,
+fun SettingsRoute(
   paddingValues: PaddingValues
 ) {
-  NavHost(
-    navController = navController,
-    startDestination = Destination.Home.route,
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(paddingValues)
   ) {
-    composable(Destination.Home.route) {
-      HomeRoute(paddingValues = paddingValues)
-    }
-    composable(Destination.Settings.route) {
-      SettingsRoute(paddingValues = paddingValues)
-    }
+    Text(
+      text = "App Settings",
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp),
+      style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
+    )
   }
 }
