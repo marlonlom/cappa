@@ -52,14 +52,26 @@ fun MainScaffold(
     navController = navController
   )
 
+  val isExpandedWidth = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
+
+  val isDetailDestination = !Destination.listOf().map { it.route }.contains(currentRoute)
+
   Scaffold(
     modifier = modifier
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.surface),
-    topBar = {},
+    topBar = {
+      if (isDetailDestination) {
+        AppTopBar(
+          onNavigationIconClicked = {
+            navController.popBackStack()
+          }
+        )
+      }
+    },
     content = {
       Row {
-        if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+        if (isExpandedWidth && !isDetailDestination) {
           AppNavRail(
             currentRoute = currentRoute,
             navigationActions = navigationActions
@@ -68,12 +80,17 @@ fun MainScaffold(
         NavigationHost(
           navController = navController,
           windowSizeClass = windowSizeClass,
-          paddingValues = it
+          paddingValues = it,
+          navigateToProductDetailRoute = { catalogItemId ->
+            navigationActions.navigateToDetail(
+              Destination.Detail.getItemRouteWithId(catalogItemId)
+            )
+          }
         )
       }
     },
     bottomBar = {
-      if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
+      if (!isExpandedWidth && !isDetailDestination) {
         MainBottomBar(
           currentRoute = currentRoute,
           navigationActions = navigationActions,

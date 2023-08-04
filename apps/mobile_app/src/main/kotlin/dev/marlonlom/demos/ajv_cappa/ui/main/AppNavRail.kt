@@ -52,7 +52,8 @@ fun AppNavRail(
           when (it) {
             is Destination.Home -> navigationActions.navigateToHome()
             is Destination.Search -> navigationActions.navigateToSearch()
-            is Destination.Settings -> navigationActions.navigateToAbout()
+            is Destination.Detail -> navigationActions.navigateToAbout()
+            else -> {}
           }
         },
         icon = {
