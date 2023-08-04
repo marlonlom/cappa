@@ -53,7 +53,7 @@ class HomeViewModelTest {
     val uiState = viewModel.uiState
     assertNotNull(uiState)
     assertTrue(uiState.value is Response.Success)
-    assertTrue((uiState.value.successOr(emptyList()).isNotEmpty()))
+    assertTrue(uiState.value.successOr(emptyList()).isNotEmpty())
   }
 
   @Test
