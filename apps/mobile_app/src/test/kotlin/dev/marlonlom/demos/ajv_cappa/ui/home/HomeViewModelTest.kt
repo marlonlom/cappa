@@ -21,11 +21,11 @@
 
 package dev.marlonlom.demos.ajv_cappa.ui.home
 
-import dev.marlonlom.demos.ajv_cappa.catalog.data.CatalogDataService
-import dev.marlonlom.demos.ajv_cappa.catalog.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.catalog.data.Punctuations
-import dev.marlonlom.demos.ajv_cappa.catalog.data.Response
-import dev.marlonlom.demos.ajv_cappa.catalog.data.successOr
+import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.main.data.Punctuations
+import dev.marlonlom.demos.ajv_cappa.main.data.Response
+import dev.marlonlom.demos.ajv_cappa.main.data.successOr
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertNotEquals
