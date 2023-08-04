@@ -23,6 +23,8 @@
   <string name="destination_home">Inicio</string>
   <string name="destination_search">Buscar</string>
   <string name="destination_settings">Ajustes</string>
+  <string name="destination_detail">Detalle</string>
   <string name="home_title_enjoy">Disfruta</string>
   <string name="home_title_exclusive_items">Productos exclusivos</string>
+  <string name="detail_text_points">Puntos</string>
 </resources>
