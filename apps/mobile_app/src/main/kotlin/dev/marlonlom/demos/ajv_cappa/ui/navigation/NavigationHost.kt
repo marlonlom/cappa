@@ -22,27 +22,43 @@
 package dev.marlonlom.demos.ajv_cappa.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
+import dev.marlonlom.demos.ajv_cappa.ui.home.HomeViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
 
 @Composable
 fun NavigationHost(
   navController: NavHostController,
-  paddingValues: PaddingValues
+  paddingValues: PaddingValues,
+  windowSizeClass: WindowSizeClass
 ) {
   NavHost(
     navController = navController,
     startDestination = Destination.Home.route,
   ) {
     composable(Destination.Home.route) {
-      HomeRoute(paddingValues = paddingValues)
+      val homeViewModel: HomeViewModel = viewModel(
+        factory = HomeViewModel.provideFactory(
+          CatalogDataService()
+        )
+      )
+      HomeRoute(
+        paddingValues = paddingValues,
+        windowSizeClass = windowSizeClass,
+        viewModel = homeViewModel
+      )
     }
     composable(Destination.Settings.route) {
-      SettingsRoute(paddingValues = paddingValues)
+      SettingsRoute(
+        paddingValues = paddingValues
+      )
     }
   }
 }
