@@ -21,4 +21,7 @@
 
 <resources>
   <string name="app_name">cappa</string>
+  <string name="destination_home">Home</string>
+  <string name="destination_search">Search</string>
+  <string name="destination_settings">Settings</string>
 </resources>
