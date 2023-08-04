@@ -34,20 +34,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.ui.detail.ProductDetailDialog
 
 @Composable
 fun LazyCatalogGrid(
   paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
-  catalogItems: List<CatalogItem>
+  catalogItems: List<CatalogItem>,
+  navigateToProductDetailRoute: (Long) -> Unit
 ) {
   val gridColumnsCount = when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> 2
@@ -58,25 +54,6 @@ fun LazyCatalogGrid(
   val columnBottomPaddingHorizontal = when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> 20.dp
     else -> 60.dp
-  }
-  var selectedCatalogItem by remember {
-    mutableStateOf(
-      CatalogItem(
-        id = -1L,
-        title = "",
-        picture = "",
-        punctuations = emptyList()
-      )
-    )
-  }
-  var dialogOpen by remember { mutableStateOf(false) }
-
-  if (dialogOpen) {
-    ProductDetailDialog(
-      windowSizeClass = windowSizeClass,
-      catalogItem = selectedCatalogItem,
-      onDismissed = { dialogOpen = false }
-    )
   }
 
   LazyVerticalGrid(
@@ -96,8 +73,7 @@ fun LazyCatalogGrid(
       CatalogItemCard(
         catalogItem = item,
         onCardClicked = { catalogItem: CatalogItem ->
-          dialogOpen = true
-          selectedCatalogItem = catalogItem
+          navigateToProductDetailRoute(catalogItem.id)
         }
       )
     }

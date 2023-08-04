@@ -31,7 +31,8 @@ import dev.marlonlom.demos.ajv_cappa.main.data.Response
 fun HomeRoute(
   paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
-  viewModel: HomeViewModel
+  viewModel: HomeViewModel,
+  navigateToProductDetailRoute: (Long) -> Unit
 ) {
   val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -47,7 +48,8 @@ fun HomeRoute(
           LazyCatalogGrid(
             paddingValues = paddingValues,
             windowSizeClass = windowSizeClass,
-            catalogItems = catalogItems
+            catalogItems = catalogItems,
+            navigateToProductDetailRoute = navigateToProductDetailRoute
           )
         }
       }
