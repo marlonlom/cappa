@@ -67,12 +67,13 @@ fun MainScaffold(
         }
         NavigationHost(
           navController = navController,
+          windowSizeClass = windowSizeClass,
           paddingValues = it
         )
       }
     },
     bottomBar = {
-      if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact) {
+      if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Expanded) {
         MainBottomBar(
           currentRoute = currentRoute,
           navigationActions = navigationActions,
