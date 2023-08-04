@@ -23,7 +23,7 @@ package dev.marlonlom.demos.ajv_cappa.ui.home
 
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.main.data.Punctuations
+import dev.marlonlom.demos.ajv_cappa.main.data.Punctuation
 import dev.marlonlom.demos.ajv_cappa.main.data.Response
 import dev.marlonlom.demos.ajv_cappa.main.data.successOr
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
@@ -63,7 +63,7 @@ class HomeViewModelTest {
       title = "Granizado",
       picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
       punctuations = listOf(
-        Punctuations(
+        Punctuation(
           label = "Mediano",
           pointsQty = 2225
         )
@@ -71,7 +71,7 @@ class HomeViewModelTest {
     )
 
     val uiState = viewModel.uiState
-    val catalogItem = uiState.value.successOr(emptyList()).find { it.id == 15396L }
+    val catalogItem = uiState.value.successOr(emptyList()).find { it.id == expectedItem.id }
     assertNotNull(uiState)
     assertNotNull(catalogItem)
   }

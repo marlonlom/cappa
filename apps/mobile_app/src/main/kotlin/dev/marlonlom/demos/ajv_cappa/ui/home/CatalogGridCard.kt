@@ -44,7 +44,8 @@ import java.util.Locale
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun CatalogItemCard(
-  catalogItem: CatalogItem
+  catalogItem: CatalogItem,
+  onCardClicked: (CatalogItem) -> Unit
 ) {
   Card(
     shape = MaterialTheme.shapes.medium,
@@ -54,6 +55,7 @@ fun CatalogItemCard(
     ),
     onClick = {
       Timber.d("[LazyCatalogGrid] clicked card item: ${catalogItem.title}")
+      onCardClicked(catalogItem)
     }
   ) {
     AsyncImage(
@@ -80,5 +82,5 @@ fun CatalogItemCard(
   }
 }
 
-private inline val String.toSentenceCase: String
+inline val String.toSentenceCase: String
   get() = this.lowercase(Locale.getDefault()).replaceFirstChar { it.uppercaseChar() }
