@@ -53,7 +53,7 @@ internal class CatalogDataServiceTest {
       title = "Granizado",
       picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
       punctuations = listOf(
-        Punctuations(
+        Punctuation(
           label = "Mediano",
           pointsQty = 2225
         )

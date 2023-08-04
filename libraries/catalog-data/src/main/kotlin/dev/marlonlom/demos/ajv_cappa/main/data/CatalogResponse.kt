@@ -38,7 +38,7 @@ data class CatalogItem(
   val id: Long,
   val title: String,
   val picture: String,
-  val punctuations: List<Punctuations>
+  val punctuations: List<Punctuation>
 )
 
 /**
@@ -50,7 +50,7 @@ data class CatalogItem(
  * @property pointsQty punctuation quantity value
  */
 @Serializable
-data class Punctuations(
+data class Punctuation(
   val label: String,
   val pointsQty: Int
 )
