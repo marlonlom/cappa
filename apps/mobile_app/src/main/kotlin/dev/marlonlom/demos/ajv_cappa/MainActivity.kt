@@ -28,6 +28,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffold
 import dev.marlonlom.demos.ajv_cappa.ui.theme.CappaTheme
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 class MainActivity : ComponentActivity() {
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       val windowSizeClass = calculateWindowSizeClass(this)
+      Timber.d("[MainActivity] windowSizeClass=$windowSizeClass")
       CappaTheme {
         MainScaffold(
           windowSizeClass = windowSizeClass
