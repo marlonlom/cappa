@@ -22,15 +22,16 @@
 package dev.marlonlom.demos.ajv_cappa.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -43,12 +44,12 @@ fun LazyCatalogGrid(
   paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
   catalogItems: List<CatalogItem>,
-  navigateToProductDetailRoute: (Long) -> Unit
+  navigateToProductDetailRoute: (Long) -> Unit,
+  modifier: Modifier = Modifier
 ) {
   val gridColumnsCount = when (windowSizeClass.widthSizeClass) {
-    WindowWidthSizeClass.Compact -> 2
     WindowWidthSizeClass.Medium -> 3
-    else -> 4
+    else -> 2
   }
 
   val columnBottomPaddingHorizontal = when (windowSizeClass.widthSizeClass) {
@@ -56,34 +57,41 @@ fun LazyCatalogGrid(
     else -> 60.dp
   }
 
-  LazyVerticalGrid(
-    modifier = Modifier
-      .fillMaxWidth()
+  val gridItemHeight = when (windowSizeClass.widthSizeClass) {
+    WindowWidthSizeClass.Expanded -> 60.dp
+    else -> 120.dp
+  }
+
+  Column(
+    modifier = modifier
       .padding(paddingValues)
       .padding(horizontal = columnBottomPaddingHorizontal),
-    columns = GridCells.Fixed(gridColumnsCount),
-    horizontalArrangement = Arrangement.spacedBy(20.dp),
-    verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
-    item(span = { GridItemSpan(gridColumnsCount) }) {
-      HomeTitleText()
-    }
+    HomeTitleText()
 
-    items(items = catalogItems) { item: CatalogItem ->
-      CatalogItemCard(
-        catalogItem = item,
-        onCardClicked = { catalogItem: CatalogItem ->
+    Divider(modifier = Modifier.padding(bottom = 10.dp))
+
+    LazyVerticalGrid(
+      columns = GridCells.Fixed(gridColumnsCount),
+      horizontalArrangement = Arrangement.spacedBy(20.dp),
+      verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+
+      items(items = catalogItems) { item: CatalogItem ->
+        CatalogItemCard(
+          catalogItem = item,
+          gridItemHeight = gridItemHeight
+        ) { catalogItem: CatalogItem ->
           navigateToProductDetailRoute(catalogItem.id)
         }
-      )
-    }
+      }
 
-    item(
-      span = { GridItemSpan(gridColumnsCount) }
-    ) {
-      Spacer(modifier = Modifier.height(4.dp))
-    }
+      item(
+        span = { GridItemSpan(gridColumnsCount) }
+      ) {
+        Spacer(modifier = Modifier.height(4.dp))
+      }
 
+    }
   }
 }
-

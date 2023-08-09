@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
@@ -45,6 +46,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 fun CatalogItemCard(
   catalogItem: CatalogItem,
+  gridItemHeight: Dp,
   onCardClicked: (CatalogItem) -> Unit
 ) {
   Card(
@@ -66,7 +68,7 @@ fun CatalogItemCard(
         .padding(8.dp)
         .clip(RoundedCornerShape(10.dp))
         .fillMaxWidth()
-        .height(120.dp)
+        .height(gridItemHeight)
     )
     Text(
       text = catalogItem.title.toSentenceCase,

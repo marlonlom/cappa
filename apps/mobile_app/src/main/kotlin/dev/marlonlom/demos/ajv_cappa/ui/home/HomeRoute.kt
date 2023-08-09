@@ -24,6 +24,7 @@ package dev.marlonlom.demos.ajv_cappa.ui.home
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.marlonlom.demos.ajv_cappa.main.data.Response
 
@@ -32,6 +33,7 @@ fun HomeRoute(
   paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
   viewModel: HomeViewModel,
+  modifier: Modifier = Modifier,
   navigateToProductDetailRoute: (Long) -> Unit
 ) {
   val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,6 +51,7 @@ fun HomeRoute(
             paddingValues = paddingValues,
             windowSizeClass = windowSizeClass,
             catalogItems = catalogItems,
+            modifier = modifier,
             navigateToProductDetailRoute = navigateToProductDetailRoute
           )
         }
