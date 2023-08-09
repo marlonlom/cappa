@@ -33,6 +33,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navOptions
 import dev.marlonlom.demos.ajv_cappa.R
 
 /**
@@ -75,7 +76,7 @@ sealed class Destination(
 
     fun getItemRouteWithId(itemId: Long) = "$route/$itemId"
 
-    val arguments = listOf(navArgument(itemIdArg) { type = NavType.StringType })
+    val arguments = listOf(navArgument(itemIdArg) { type = NavType.LongType })
   }
 
   companion object {
@@ -127,7 +128,9 @@ class AppNavigationActions(private val navController: NavHostController) {
    * @param itemRouteWithId detail route using selected item id
    */
   fun navigateToDetail(itemRouteWithId: String) {
-    navController.navigate(route = itemRouteWithId)
+    navController.navigate(route = itemRouteWithId, navOptions {
+      useDefaultNavOptions(navController)
+    })
   }
 
   private fun NavOptionsBuilder.useDefaultNavOptions(navController: NavHostController) {
