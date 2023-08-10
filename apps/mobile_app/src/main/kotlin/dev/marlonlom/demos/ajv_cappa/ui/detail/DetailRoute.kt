@@ -22,7 +22,6 @@
 package dev.marlonlom.demos.ajv_cappa.ui.detail
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -31,13 +30,13 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 
 @Composable
 fun DetailRoute(
-  catalogItemId: Long,
-  paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
-  viewModel: DetailViewModel
+  catalogItem: CatalogItem,
+  modifier: Modifier
 ) {
   val columnPaddingHorizontal = when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> 20.dp
@@ -45,11 +44,10 @@ fun DetailRoute(
   }
 
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
-      .padding(paddingValues)
       .padding(columnPaddingHorizontal)
   ) {
-    Text(text = "Catalog item $catalogItemId")
+    Text(text = "Catalog item ${catalogItem.title}")
   }
 }
