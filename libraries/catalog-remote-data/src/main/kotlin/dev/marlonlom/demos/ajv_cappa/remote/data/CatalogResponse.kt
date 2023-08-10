@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package dev.marlonlom.demos.ajv_cappa.main.data
+package dev.marlonlom.demos.ajv_cappa.remote.data
 
 import kotlinx.serialization.Serializable
 
