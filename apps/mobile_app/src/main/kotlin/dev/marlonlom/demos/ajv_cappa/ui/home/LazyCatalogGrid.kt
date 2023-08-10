@@ -37,7 +37,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 
 @Composable
 fun LazyCatalogGrid(

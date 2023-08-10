@@ -26,7 +26,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.marlonlom.demos.ajv_cappa.main.data.Response
+import dev.marlonlom.demos.ajv_cappa.remote.data.Response
 
 @Composable
 fun HomeRoute(
