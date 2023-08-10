@@ -26,6 +26,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffold
 import dev.marlonlom.demos.ajv_cappa.ui.theme.CappaTheme
 import timber.log.Timber
@@ -37,9 +40,15 @@ class MainActivity : ComponentActivity() {
     setContent {
       val windowSizeClass = calculateWindowSizeClass(this)
       Timber.d("[MainActivity] windowSizeClass=$windowSizeClass")
+      val catalogViewModel: CatalogViewModel = viewModel(
+        factory = CatalogViewModel.provideFactory(
+          CatalogDataService()
+        )
+      )
       CappaTheme {
         MainScaffold(
-          windowSizeClass = windowSizeClass
+          windowSizeClass = windowSizeClass,
+          viewModel = catalogViewModel
         )
       }
     }
