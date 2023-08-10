@@ -23,7 +23,7 @@ package dev.marlonlom.demos.ajv_cappa.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 
 class DetailViewModel(
   dataService: CatalogDataService

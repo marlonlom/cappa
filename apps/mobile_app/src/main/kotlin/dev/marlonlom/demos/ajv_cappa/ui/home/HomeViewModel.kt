@@ -24,9 +24,9 @@ package dev.marlonlom.demos.ajv_cappa.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.main.data.Response
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.remote.data.Response
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

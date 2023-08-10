@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 import timber.log.Timber
 import java.util.Locale
 

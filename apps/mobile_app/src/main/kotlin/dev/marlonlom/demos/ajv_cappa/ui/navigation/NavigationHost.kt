@@ -30,7 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailRoute
 import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
