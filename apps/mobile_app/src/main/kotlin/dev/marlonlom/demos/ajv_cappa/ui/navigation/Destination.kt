@@ -24,7 +24,6 @@ package dev.marlonlom.demos.ajv_cappa.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,7 +32,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import androidx.navigation.navOptions
 import dev.marlonlom.demos.ajv_cappa.R
 
 /**
@@ -48,6 +46,7 @@ sealed class Destination(
   @StringRes val title: Int,
   val icon: ImageVector
 ) {
+
   object Home : Destination(
     route = "home",
     title = R.string.destination_home,
@@ -66,21 +65,26 @@ sealed class Destination(
     icon = Icons.Rounded.Settings
   )
 
-  object Detail : Destination(
-    route = "detail",
-    title = R.string.destination_settings,
-    icon = Icons.Rounded.Info
-  ) {
-    const val itemIdArg = "itemId"
-    val routeWithArg: String = "$route/{$itemIdArg}"
-
-    fun getItemRouteWithId(itemId: Long) = "$route/$itemId"
-
-    val arguments = listOf(navArgument(itemIdArg) { type = NavType.LongType })
-  }
 
   companion object {
+
+    private const val defaultId = -1L
+    const val itemIdArg = "itemId"
     fun listOf() = listOf(Home, Search, Settings)
+
+    val detailArguments = listOf(navArgument(itemIdArg) {
+      type = NavType.LongType
+      defaultValue = defaultId
+    })
+
+    fun routeWithDetail(
+      parentRoute: String,
+      itemId: Long = defaultId
+    ) = when (itemId) {
+      defaultId -> parentRoute
+      else -> "$parentRoute?itemId={$itemId}"
+    }
+
   }
 }
 
@@ -96,6 +100,7 @@ class AppNavigationActions(private val navController: NavHostController) {
    *
    */
   fun navigateToHome() {
+    clearNavigationArguments()
     navController.navigate(route = Destination.Home.route) {
       useDefaultNavOptions(navController)
     }
@@ -106,31 +111,25 @@ class AppNavigationActions(private val navController: NavHostController) {
    *
    */
   fun navigateToSearch() {
+    clearNavigationArguments()
     navController.navigate(route = Destination.Search.route) {
       useDefaultNavOptions(navController)
     }
   }
 
   /**
-   * Action for navigation to About destination
+   * Action for navigation to Search destination
    *
    */
-  fun navigateToAbout() {
-    navController.navigate(route = Destination.Detail.route) {
+  fun navigateToSettings() {
+    clearNavigationArguments()
+    navController.navigate(route = Destination.Settings.route) {
       useDefaultNavOptions(navController)
     }
   }
 
-
-  /**
-   * Action for navigation to Detail destination
-   *
-   * @param itemRouteWithId detail route using selected item id
-   */
-  fun navigateToDetail(itemRouteWithId: String) {
-    navController.navigate(route = itemRouteWithId, navOptions {
-      useDefaultNavOptions(navController)
-    })
+  private fun clearNavigationArguments() {
+    navController.currentBackStackEntry?.arguments?.clear()
   }
 
   private fun NavOptionsBuilder.useDefaultNavOptions(navController: NavHostController) {
