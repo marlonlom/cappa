@@ -63,6 +63,7 @@ fun NavigationHost(
 
     composable(Destination.Settings.route) {
       SettingsRoute(
+        windowSizeClass = windowSizeClass,
         modifier = modifier
       )
     }

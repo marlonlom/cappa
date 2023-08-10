@@ -26,15 +26,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsRoute(modifier: Modifier = Modifier) {
+fun SettingsRoute(modifier: Modifier = Modifier, windowSizeClass: WindowSizeClass) {
+  val columnPaddingHorizontal = when (windowSizeClass.widthSizeClass) {
+    WindowWidthSizeClass.Compact -> 20.dp
+    else -> 60.dp
+  }
+
   Column(
-    modifier = modifier.fillMaxWidth()
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(horizontal = columnPaddingHorizontal)
   ) {
     Text(
       text = "App Settings",
