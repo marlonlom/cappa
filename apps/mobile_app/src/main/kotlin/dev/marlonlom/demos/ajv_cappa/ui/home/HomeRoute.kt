@@ -21,43 +21,77 @@
 
 package dev.marlonlom.demos.ajv_cappa.ui.home
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.marlonlom.demos.ajv_cappa.remote.data.Response
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
+import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailRoute
+import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 
 @Composable
 fun HomeRoute(
-  paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
-  viewModel: HomeViewModel,
+  uiState: CatalogUiState,
   modifier: Modifier = Modifier,
-  navigateToProductDetailRoute: (Long) -> Unit
+  navigateToProductDetailRoute: (Long) -> Unit,
+  selectedItem: CatalogItem?
 ) {
-  val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-  when (uiState.value) {
-    is Response.Success -> {
-      val catalogItems = (uiState.value as Response.Success).data
+  when (uiState) {
+    is CatalogUiState.Home -> {
+      val catalogItems = uiState.list
       when {
         catalogItems.isEmpty() -> {
           TODO()
         }
 
+        (selectedItem != null) and MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            LazyCatalogGrid(
+              modifier = modifier,
+              windowSizeClass = windowSizeClass,
+              catalogItems = catalogItems,
+              navigateToProductDetailRoute = navigateToProductDetailRoute
+            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+              DetailRoute(
+                catalogItem = selectedItem!!,
+                windowSizeClass = windowSizeClass,
+                modifier = modifier
+              )
+            }
+          }
+        }
+
+        (selectedItem != null) and !MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> {
+          DetailRoute(
+            catalogItem = selectedItem!!,
+            windowSizeClass = windowSizeClass,
+            modifier = modifier
+          )
+        }
+
         else -> {
           LazyCatalogGrid(
-            paddingValues = paddingValues,
+            modifier = modifier,
             windowSizeClass = windowSizeClass,
             catalogItems = catalogItems,
-            modifier = modifier,
             navigateToProductDetailRoute = navigateToProductDetailRoute
           )
         }
       }
     }
 
-    is Response.Failure -> TODO()
+    is CatalogUiState.Error -> TODO()
+
+    CatalogUiState.Loading -> TODO()
   }
 }

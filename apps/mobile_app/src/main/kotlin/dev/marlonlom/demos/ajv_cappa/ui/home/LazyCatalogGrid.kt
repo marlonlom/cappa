@@ -23,7 +23,6 @@ package dev.marlonlom.demos.ajv_cappa.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,17 +37,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 
 @Composable
 fun LazyCatalogGrid(
-  paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
   catalogItems: List<CatalogItem>,
   navigateToProductDetailRoute: (Long) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val gridColumnsCount = when (windowSizeClass.widthSizeClass) {
-    WindowWidthSizeClass.Medium -> 3
+  val gridColumnsCount = when {
+    MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> 4
+    windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> 3
     else -> 2
   }
 
@@ -64,10 +64,9 @@ fun LazyCatalogGrid(
 
   Column(
     modifier = modifier
-      .padding(paddingValues)
       .padding(horizontal = columnBottomPaddingHorizontal),
   ) {
-    HomeTitleText()
+    HomeTitleText(windowSizeClass = windowSizeClass)
 
     Divider(modifier = Modifier.padding(bottom = 10.dp))
 
