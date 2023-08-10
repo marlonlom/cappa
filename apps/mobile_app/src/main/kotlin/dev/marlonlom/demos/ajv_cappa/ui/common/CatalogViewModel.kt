@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package dev.marlonlom.demos.ajv_cappa.ui.home
+package dev.marlonlom.demos.ajv_cappa.ui.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -27,47 +27,86 @@ import androidx.lifecycle.viewModelScope
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.Response
+import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState.Error
+import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState.Home
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
-class HomeViewModel(
+
+class CatalogViewModel(
   private val dataService: CatalogDataService
 ) : ViewModel() {
 
-  private val viewModelState = MutableStateFlow<Response<List<CatalogItem>>>(Response.Success(emptyList()))
+  private val _uiState = MutableStateFlow<CatalogUiState>(CatalogUiState.Loading)
 
-  val uiState = viewModelState.stateIn(
+  val uiState = _uiState.stateIn(
     viewModelScope,
     SharingStarted.Eagerly,
-    viewModelState.value
+    _uiState.value
   )
 
   init {
-    fetchCatalogItems()
+    fetchInitialInformation()
   }
 
-  private fun fetchCatalogItems() {
+  private fun fetchInitialInformation() {
     viewModelScope.launch {
       val response: Response<List<CatalogItem>> = dataService.fetchData()
-      viewModelState.update {
-        response
+      _uiState.update {
+        when (response) {
+          is Response.Failure -> Error(response.exception)
+
+          is Response.Success -> Home(response.data, NEGATIVE_ITEM_ID)
+        }
       }
     }
+  }
+
+  /**
+   * Updates selected item id for success ui state.
+   *
+   * @param itemId selected item id from list
+   */
+  fun updateSelectedItemId(itemId: Long) {
+    viewModelScope.launch {
+      if (_uiState.value is Home) {
+        val newStateValue = (_uiState.value as Home).copy(
+          selectedId = itemId
+        )
+        Timber.d("[CatalogViewModel] newStateValue.selectedId=${newStateValue.selectedId}")
+        _uiState.update {
+          newStateValue
+        }
+      }
+    }
+  }
+
+  /**
+   * Fetches a single catalog item using selected id from success ui state
+   *
+   * @return found catalog item, null otherwise
+   */
+  fun fetchSingle(): CatalogItem? = with(_uiState.value as Home) {
+    this.list.find { this.selectedId == it.id }
   }
 
   /**
    * Factory for HomeViewModel that takes CatalogDataService as a dependency
    */
   companion object {
+
+    const val NEGATIVE_ITEM_ID = -1L
+
     fun provideFactory(
       dataService: CatalogDataService
     ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
       @Suppress("UNCHECKED_CAST")
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HomeViewModel(dataService) as T
+        return CatalogViewModel(dataService) as T
       }
     }
   }

@@ -19,41 +19,48 @@
  * under the License.
  */
 
-package dev.marlonlom.demos.ajv_cappa.ui.home
+package dev.marlonlom.demos.ajv_cappa.ui.common
 
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogDataService
-import dev.marlonlom.demos.ajv_cappa.main.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.main.data.Punctuation
-import dev.marlonlom.demos.ajv_cappa.main.data.Response
-import dev.marlonlom.demos.ajv_cappa.main.data.successOr
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.remote.data.Punctuation
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class HomeViewModelTest {
+class CatalogViewModelTest {
 
   @get:Rule
   val mainDispatcherRule = MainDispatcherRule()
 
-  private lateinit var viewModel: HomeViewModel
+  private lateinit var viewModel: CatalogViewModel
 
   @Before
   fun setUp() {
-    viewModel = HomeViewModel(CatalogDataService())
+    viewModel = CatalogViewModel(CatalogDataService())
   }
 
   @Test
   fun shouldCheckUiStateValueIsNotEmptyList() = runTest {
     val uiState = viewModel.uiState
     assertNotNull(uiState)
-    assertTrue(uiState.value is Response.Success)
-    assertTrue(uiState.value.successOr(emptyList()).isNotEmpty())
+    when (uiState.value) {
+      is CatalogUiState.Home -> {
+        val home = uiState.value as CatalogUiState.Home
+        assertTrue(home.list.isNotEmpty())
+        assertEquals(-1L, home.selectedId)
+      }
+
+      else -> fail()
+    }
   }
 
   @Test
@@ -71,23 +78,42 @@ class HomeViewModelTest {
     )
 
     val uiState = viewModel.uiState
-    val catalogItem = uiState.value.successOr(emptyList()).find { it.id == expectedItem.id }
     assertNotNull(uiState)
-    assertNotNull(catalogItem)
+    when (uiState.value) {
+      is CatalogUiState.Home -> {
+        val home = uiState.value as CatalogUiState.Home
+        viewModel.updateSelectedItemId(expectedItem.id)
+        val catalogItem = viewModel.fetchSingle()
+        assertTrue(home.list.isNotEmpty())
+        assertNotNull(catalogItem)
+        assertEquals(expectedItem, catalogItem)
+      }
+
+      else -> fail()
+    }
   }
 
   @Test
   fun shouldValidateExpectedCatalogItemNotExist() {
     val expectedItem = CatalogItem(
       id = 15996L,
-      title = "None",
+      title = "Loading",
       picture = "https://nopic.com/img/null.jpg",
       punctuations = listOf()
     )
     val uiState = viewModel.uiState
-    val catalogItem = uiState.value.successOr(emptyList()).find { it.id == expectedItem.id }
     assertNotNull(uiState)
-    assertNull(catalogItem)
-    assertNotEquals(expectedItem, catalogItem)
+    when (uiState.value) {
+      is CatalogUiState.Home -> {
+        val home = uiState.value as CatalogUiState.Home
+        viewModel.updateSelectedItemId(expectedItem.id)
+        val catalogItem = viewModel.fetchSingle()
+        assertTrue(home.list.isNotEmpty())
+        assertNull(catalogItem)
+        assertNotEquals(expectedItem, catalogItem)
+      }
+
+      else -> fail()
+    }
   }
 }
