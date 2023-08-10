@@ -22,7 +22,6 @@
 package dev.marlonlom.demos.ajv_cappa.ui.settings
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -33,17 +32,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsRoute(
-  paddingValues: PaddingValues
-) {
+fun SettingsRoute(modifier: Modifier = Modifier) {
   Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(paddingValues)
+    modifier = modifier.fillMaxWidth()
   ) {
     Text(
       text = "App Settings",
-      modifier = Modifier
+      modifier = modifier
         .fillMaxWidth()
         .padding(20.dp),
       style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
