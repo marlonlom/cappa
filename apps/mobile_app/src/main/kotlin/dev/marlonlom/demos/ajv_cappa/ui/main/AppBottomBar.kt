@@ -55,8 +55,7 @@ fun MainBottomBar(
           when (it) {
             is Destination.Home -> navigationActions.navigateToHome()
             is Destination.Search -> navigationActions.navigateToSearch()
-            is Destination.Detail -> navigationActions.navigateToAbout()
-            else -> {}
+            is Destination.Settings -> navigationActions.navigateToSettings()
           }
         },
         icon = {
