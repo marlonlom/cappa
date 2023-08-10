@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,10 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import dev.marlonlom.demos.ajv_cappa.R
+import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 
 
 @Composable
-fun HomeTitleText() {
+fun HomeTitleText(windowSizeClass: WindowSizeClass) {
   Text(
     text = buildAnnotatedString {
       withStyle(
@@ -45,8 +47,12 @@ fun HomeTitleText() {
           fontWeight = FontWeight.Light
         )
       ) {
+        val textTitleEnjoy = stringResource(R.string.home_title_enjoy)
         append(
-          "${stringResource(R.string.home_title_enjoy)} \n"
+          when {
+            MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> "$textTitleEnjoy "
+            else -> "$textTitleEnjoy \n"
+          }
         )
       }
       withStyle(
