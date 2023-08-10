@@ -21,77 +21,49 @@
 
 package dev.marlonlom.demos.ajv_cappa.ui.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
-import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailRoute
-import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailViewModel
+import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
 import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
-import dev.marlonlom.demos.ajv_cappa.ui.home.HomeViewModel
+import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination.Companion.detailArguments
 import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
-import timber.log.Timber
 
 @Composable
 fun NavigationHost(
+  modifier: Modifier = Modifier,
   navController: NavHostController,
-  paddingValues: PaddingValues,
   windowSizeClass: WindowSizeClass,
-  navigateToProductDetailRoute: (Long) -> Unit,
-  modifier: Modifier = Modifier
+  uiState: CatalogUiState,
+  selectedItem: CatalogItem?,
+  navigateToProductDetailRoute: (Long) -> Unit
 ) {
-  val isExpandedWidth = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
 
   NavHost(
     navController = navController,
     startDestination = Destination.Home.route,
   ) {
-    composable(Destination.Home.route) {
-      val homeViewModel: HomeViewModel = viewModel(
-        factory = HomeViewModel.provideFactory(
-          CatalogDataService()
-        )
-      )
+    composable(
+      route = Destination.routeWithDetail(Destination.Home.route),
+      arguments = detailArguments
+    ) {
+
       HomeRoute(
-        paddingValues = paddingValues,
         windowSizeClass = windowSizeClass,
-        viewModel = homeViewModel,
         modifier = modifier,
+        uiState = uiState,
+        selectedItem = selectedItem,
         navigateToProductDetailRoute = navigateToProductDetailRoute
       )
     }
 
-    if (!isExpandedWidth) {
-      composable(
-        route = Destination.Detail.routeWithArg,
-        arguments = Destination.Detail.arguments
-      ) { navBackStackEntry ->
-        val catalogItemId = navBackStackEntry.arguments!!.getLong(Destination.Detail.itemIdArg)
-        Timber.d("[NavigationHost] catalogItemId=$catalogItemId")
-        val detailViewModel: DetailViewModel = viewModel(
-          factory = DetailViewModel.provideFactory(
-            dataService = CatalogDataService()
-          )
-        )
-
-        DetailRoute(
-          catalogItemId = catalogItemId,
-          paddingValues = paddingValues,
-          windowSizeClass = windowSizeClass,
-          viewModel = detailViewModel
-        )
-      }
-    }
-
     composable(Destination.Settings.route) {
       SettingsRoute(
-        paddingValues = paddingValues
+        modifier = modifier
       )
     }
   }
