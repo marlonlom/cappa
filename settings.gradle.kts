@@ -38,4 +38,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "cappa"
 include(":apps:mobile_app")
-include(":libraries:catalog-data")
+include(":libraries:catalog-remote-data")
