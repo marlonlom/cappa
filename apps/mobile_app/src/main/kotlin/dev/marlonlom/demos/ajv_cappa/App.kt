@@ -22,12 +22,15 @@
 package dev.marlonlom.demos.ajv_cappa
 
 import android.app.Application
+import androidx.work.Configuration
+import dev.marlonlom.demos.ajv_cappa.domain.workers.CatalogDatabaseWorker
 import timber.log.Timber
 
-class App : Application() {
+class App : Application(), Configuration.Provider {
   override fun onCreate() {
     super.onCreate()
     setupTimber()
+    CatalogDatabaseWorker.run(applicationContext)
   }
 
   private fun setupTimber() {
@@ -35,4 +38,10 @@ class App : Application() {
       Timber.plant(Timber.DebugTree())
     }
   }
+
+  override fun getWorkManagerConfiguration(): Configuration {
+    val minimumLoggingLevel = if (BuildConfig.DEBUG) android.util.Log.DEBUG else android.util.Log.ERROR
+    return Configuration.Builder().setMinimumLoggingLevel(minimumLoggingLevel).build()
+  }
+
 }
