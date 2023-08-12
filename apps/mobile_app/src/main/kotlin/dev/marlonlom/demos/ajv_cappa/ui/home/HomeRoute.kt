@@ -63,9 +63,8 @@ fun HomeRoute(
             )
             Column(modifier = Modifier.fillMaxWidth()) {
               DetailRoute(
-                catalogItem = selectedItem!!,
                 windowSizeClass = windowSizeClass,
-                modifier = modifier
+                catalogItem = selectedItem!!
               )
             }
           }
@@ -73,15 +72,13 @@ fun HomeRoute(
 
         (selectedItem != null) and !MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> {
           DetailRoute(
-            catalogItem = selectedItem!!,
             windowSizeClass = windowSizeClass,
-            modifier = modifier
+            catalogItem = selectedItem!!
           )
         }
 
         else -> {
           LazyCatalogGrid(
-            modifier = modifier,
             windowSizeClass = windowSizeClass,
             catalogItems = catalogItems,
             navigateToProductDetailRoute = navigateToProductDetailRoute
