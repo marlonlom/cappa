@@ -77,6 +77,7 @@ android {
 
 dependencies {
 
+  implementation(project(":libraries:catalog-local-data"))
   implementation(project(":libraries:catalog-remote-data"))
 
   val composeBom = platform(libs.androidx.compose.bom)
