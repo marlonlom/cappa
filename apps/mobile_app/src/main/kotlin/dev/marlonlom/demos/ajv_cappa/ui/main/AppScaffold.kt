@@ -139,7 +139,7 @@ object MainScaffoldUtil {
 
   fun canShowNavigationRail(
     wsc: WindowSizeClass, isDetailDestination: Boolean
-  ) = (isMobileLandscape(wsc) and !isDetailDestination) or isTabletLandscape(wsc)
+  ) = isMobileLandscape(wsc) and !isDetailDestination or isTabletLandscape(wsc)
 
   fun canShowBottomBar(windowSizeClass: WindowSizeClass, isDetailDestination: Boolean) =
     !isDetailDestination && !windowSizeClass.isExpandedWidth
