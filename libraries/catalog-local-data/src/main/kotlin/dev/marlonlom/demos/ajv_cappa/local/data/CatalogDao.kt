@@ -41,7 +41,7 @@ data class ProductItem(
   primaryKeys = ["punctuation_id", "punctuation_product_id"]
 )
 data class ProductItemPoint(
-  @ColumnInfo(name = "punctuation_id") @PrimaryKey(autoGenerate = true) val id: Long,
+  @ColumnInfo(name = "punctuation_id") val id: Long,
   @ColumnInfo(name = "punctuation_product_id") val productId: Long,
   @ColumnInfo(name = "punctuation_label") val label: String,
   @ColumnInfo(name = "punctuation_points") val points: Long
