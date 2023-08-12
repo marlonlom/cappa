@@ -27,6 +27,7 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "cappa_product")
 data class ProductItem(
@@ -50,13 +51,13 @@ data class ProductItemPoint(
 interface CatalogDao {
 
   @Query("SELECT * FROM cappa_product")
-  suspend fun getProducts(): List<ProductItem>
+  fun getProducts(): Flow<List<ProductItem>>
 
   @Query("SELECT * FROM cappa_product WHERE product_id = :productId ")
-  suspend fun getProduct(productId: Long): ProductItem
+  fun getProduct(productId: Long): Flow<ProductItem>
 
   @Query("SELECT * FROM cappa_punctuation WHERE punctuation_product_id = :productId ")
-  suspend fun getPunctuations(productId: Long): List<ProductItemPoint>
+  fun getPunctuations(productId: Long): Flow<List<ProductItemPoint>>
 
   @Insert()
   fun insertAllProducts(vararg products: ProductItem)

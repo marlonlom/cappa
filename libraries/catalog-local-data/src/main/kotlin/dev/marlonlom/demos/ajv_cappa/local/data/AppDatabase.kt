@@ -21,12 +21,39 @@
 
 package dev.marlonlom.demos.ajv_cappa.local.data
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(entities = [ProductItem::class, ProductItemPoint::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
   abstract fun catalogDao(): CatalogDao
 
+  companion object {
+    @Volatile
+    private var instance: AppDatabase? = null
+
+    private const val DATABASE_NAME = "ajv-cappa-db"
+
+    fun getInstance(context: Context, postCreateDatabaseAction: () -> Unit): AppDatabase {
+      return instance ?: synchronized(this) {
+        instance ?: buildDatabase(context, postCreateDatabaseAction).also { instance = it }
+      }
+    }
+
+    private fun buildDatabase(
+      context: Context,
+      postCreateDatabaseAction: () -> Unit
+    ): AppDatabase =
+      Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+        .addCallback(callback = object : Callback() {
+          override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            postCreateDatabaseAction()
+          }
+        }).build()
+  }
 }
