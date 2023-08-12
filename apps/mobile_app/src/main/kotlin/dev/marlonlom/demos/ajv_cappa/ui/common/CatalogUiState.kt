@@ -1,6 +1,6 @@
 package dev.marlonlom.demos.ajv_cappa.ui.common
 
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 
 /**
  * Home ui state class definition
@@ -19,7 +19,7 @@ sealed class CatalogUiState {
    * @property selectedId selected item id from list
    */
   data class Home(
-    val list: List<CatalogItem>,
+    val list: List<ProductItem>,
     val selectedId: Long
   ) : CatalogUiState()
 

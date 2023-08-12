@@ -24,13 +24,13 @@ package dev.marlonlom.demos.ajv_cappa.ui.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.remote.data.Response
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState.Error
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState.Home
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ import timber.log.Timber
 
 
 class CatalogViewModel(
-  private val dataService: CatalogDataService
+  private val repository: CatalogRepository
 ) : ViewModel() {
 
   private val _uiState = MutableStateFlow<CatalogUiState>(CatalogUiState.Loading)
@@ -55,13 +55,9 @@ class CatalogViewModel(
 
   private fun fetchInitialInformation() {
     viewModelScope.launch {
-      val response: Response<List<CatalogItem>> = dataService.fetchData()
-      _uiState.update {
-        when (response) {
-          is Response.Failure -> Error(response.exception)
-
-          is Response.Success -> Home(response.data, NEGATIVE_ITEM_ID)
-        }
+      val response = repository.getAllProducts()
+      response.collect { items ->
+        _uiState.update { Home(items, NEGATIVE_ITEM_ID) }
       }
     }
   }
@@ -86,12 +82,23 @@ class CatalogViewModel(
   }
 
   /**
-   * Fetches a single catalog item using selected id from success ui state
+   * Returns a single product item using selected id from success ui state
    *
-   * @return found catalog item, null otherwise
+   * @return found product item, null otherwise
    */
-  fun fetchSingle(): CatalogItem? = with(_uiState.value as Home) {
-    this.list.find { this.selectedId == it.id }
+  fun fetchSingle(): Flow<ProductItem> = when (_uiState.value) {
+    is Home -> repository.getProduct((_uiState.value as Home).selectedId)
+    else -> flowOf(NONE)
+  }
+
+  /**
+   * Returns a list of points for selected product item
+   *
+   * @return points list for product item
+   */
+  fun fetchPoints(): Flow<List<ProductItemPoint>> = when (_uiState.value) {
+    is Home -> repository.getPunctuations((_uiState.value as Home).selectedId)
+    else -> flowOf(emptyList())
   }
 
   /**
@@ -101,12 +108,14 @@ class CatalogViewModel(
 
     const val NEGATIVE_ITEM_ID = -1L
 
+    val NONE = ProductItem(-1, "", "")
+
     fun provideFactory(
-      dataService: CatalogDataService
+      repository: CatalogRepository
     ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
       @Suppress("UNCHECKED_CAST")
       override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CatalogViewModel(dataService) as T
+        return CatalogViewModel(repository) as T
       }
     }
   }
