@@ -42,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel.Companion.NEGATIVE_ITEM_ID
+import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel.Companion.NONE
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
@@ -59,11 +60,9 @@ fun MainScaffold(
   val navBackStackEntry by navController.currentBackStackEntryAsState()
   val currentRoute =
     navBackStackEntry?.destination?.route ?: Destination.Home.route
-
-  val navigationActions = AppNavigationActions(
-    navController = navController
-  )
-
+  val navigationActions = AppNavigationActions(navController)
+  val productItem by viewModel.fetchSingle().collectAsStateWithLifecycle(initialValue = NONE)
+  val productItemPoints by viewModel.fetchPoints().collectAsStateWithLifecycle(initialValue = emptyList())
   val isDetailDestination = when (state) {
     is CatalogUiState.Home -> {
       (state as CatalogUiState.Home).selectedId != NEGATIVE_ITEM_ID
@@ -76,8 +75,8 @@ fun MainScaffold(
 
   Scaffold(
     modifier = modifier
-      .fillMaxWidth()
-      .background(MaterialTheme.colorScheme.surface),
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.surface),
     topBar = {
       if (MainScaffoldUtil.canShowTopBar(windowSizeClass, isDetailDestination)) {
         AppTopBar(
@@ -107,7 +106,8 @@ fun MainScaffold(
           navController = navController,
           windowSizeClass = windowSizeClass,
           uiState = state,
-          selectedItem = viewModel.fetchSingle()
+          selectedItem = productItem,
+          productItemPoints = productItemPoints
         ) { catalogItemId ->
           viewModel.updateSelectedItemId(catalogItemId)
           val routeWithDetail = Destination.routeWithDetail(Destination.Home.route, catalogItemId)
