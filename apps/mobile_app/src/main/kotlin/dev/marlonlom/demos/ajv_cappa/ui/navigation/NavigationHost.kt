@@ -27,7 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
 import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination.Companion.detailArguments
@@ -39,7 +40,8 @@ fun NavigationHost(
   navController: NavHostController,
   windowSizeClass: WindowSizeClass,
   uiState: CatalogUiState,
-  selectedItem: CatalogItem?,
+  selectedItem: ProductItem?,
+  productItemPoints: List<ProductItemPoint>,
   navigateToProductDetailRoute: (Long) -> Unit
 ) {
 
@@ -57,6 +59,7 @@ fun NavigationHost(
         modifier = modifier,
         uiState = uiState,
         selectedItem = selectedItem,
+        productItemPoints = productItemPoints,
         navigateToProductDetailRoute = navigateToProductDetailRoute
       )
     }

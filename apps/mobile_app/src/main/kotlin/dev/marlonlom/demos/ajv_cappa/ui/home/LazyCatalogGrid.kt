@@ -36,13 +36,14 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 
 @Composable
 fun LazyCatalogGrid(
   windowSizeClass: WindowSizeClass,
-  catalogItems: List<CatalogItem>,
+  catalogItems: List<ProductItem>,
   navigateToProductDetailRoute: (Long) -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -76,11 +77,11 @@ fun LazyCatalogGrid(
       verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
 
-      items(items = catalogItems) { item: CatalogItem ->
+      items(items = catalogItems) { item: ProductItem ->
         CatalogItemCard(
           catalogItem = item,
           gridItemHeight = gridItemHeight
-        ) { catalogItem: CatalogItem ->
+        ) { catalogItem: ProductItem ->
           navigateToProductDetailRoute(catalogItem.id)
         }
       }

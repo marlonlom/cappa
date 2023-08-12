@@ -50,22 +50,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import dev.marlonlom.demos.ajv_cappa.R
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.remote.data.Punctuation
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import dev.marlonlom.demos.ajv_cappa.ui.home.toSentenceCase
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 import dev.marlonlom.demos.ajv_cappa.ui.main.isCompactWidth
 
 @Composable
 fun DetailRoute(
-  windowSizeClass: WindowSizeClass, catalogItem: CatalogItem
+  windowSizeClass: WindowSizeClass, catalogItem: ProductItem, punctuations: List<ProductItemPoint>
 ) {
-  DetailScreen(windowSizeClass = windowSizeClass, catalogItem = catalogItem)
+  DetailScreen(windowSizeClass = windowSizeClass, catalogItem = catalogItem, punctuations = punctuations)
 }
 
 
 @Composable
-fun DetailScreen(windowSizeClass: WindowSizeClass, catalogItem: CatalogItem) {
+fun DetailScreen(windowSizeClass: WindowSizeClass, catalogItem: ProductItem, punctuations: List<ProductItemPoint>) {
 
   val paddingValues = when {
     windowSizeClass.isCompactWidth -> PaddingValues(horizontal = 20.dp, vertical = 0.dp)
@@ -76,13 +76,13 @@ fun DetailScreen(windowSizeClass: WindowSizeClass, catalogItem: CatalogItem) {
 
   when {
     windowSizeClass.isCompactWidth -> {
-      DetailContentPortrait(catalogItem, paddingValues)
+      DetailContentPortrait(catalogItem, punctuations, paddingValues)
     }
   }
 }
 
 @Composable
-private fun ProductTitleText(catalogItem: CatalogItem) {
+private fun ProductTitleText(catalogItem: ProductItem) {
   Text(
     text = catalogItem.title.toSentenceCase,
     modifier = Modifier
@@ -96,7 +96,7 @@ private fun ProductTitleText(catalogItem: CatalogItem) {
 }
 
 @Composable
-private fun ProductAsyncImage(catalogItem: CatalogItem) {
+private fun ProductAsyncImage(catalogItem: ProductItem) {
   SubcomposeAsyncImage(
     model = catalogItem.picture,
     contentDescription = null,
@@ -132,7 +132,7 @@ private fun PointsTitleText() {
 }
 
 @Composable
-fun ProductPointsGridItem(punctuation: Punctuation) {
+fun ProductPointsGridItem(punctuation: ProductItemPoint) {
   Surface(
     modifier = Modifier
       .fillMaxWidth(),
@@ -147,7 +147,7 @@ fun ProductPointsGridItem(punctuation: Punctuation) {
         style = MaterialTheme.typography.titleSmall
       )
       Text(
-        text = punctuation.pointsQty.toString(),
+        text = punctuation.points.toString(),
         style = MaterialTheme.typography.titleLarge
       )
     }
@@ -156,7 +156,11 @@ fun ProductPointsGridItem(punctuation: Punctuation) {
 }
 
 @Composable
-fun DetailContentPortrait(catalogItem: CatalogItem, paddingValues: PaddingValues) {
+fun DetailContentPortrait(
+  catalogItem: ProductItem,
+  punctuations: List<ProductItemPoint>,
+  paddingValues: PaddingValues
+) {
   LazyVerticalGrid(
     modifier = Modifier
       .fillMaxWidth()
@@ -179,7 +183,7 @@ fun DetailContentPortrait(catalogItem: CatalogItem, paddingValues: PaddingValues
       PointsTitleText()
     }
 
-    items(catalogItem.punctuations) { punctuation ->
+    items(punctuations) { punctuation ->
       ProductPointsGridItem(punctuation = punctuation)
     }
   }
