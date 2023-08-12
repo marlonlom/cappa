@@ -21,31 +21,30 @@
 
 package dev.marlonlom.demos.ajv_cappa.local.data
 
-import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+/**
+ * Local data source class.
+ *
+ * @author marlonlom
+ *
+ * @property appDatabase app database singleton instance.
+ */
+class LocalDataSource(
+  private val appDatabase: AppDatabase
+) {
 
-@Database(entities = [ProductItem::class, ProductItemPoint::class], version = 1, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
+  fun getAllProducts() = appDatabase.catalogDao().getProducts()
 
-  abstract fun catalogDao(): CatalogDao
+  fun getProduct(productId: Long) = appDatabase.catalogDao().getProduct(productId)
 
-  companion object {
-    @Volatile
-    private var instance: AppDatabase? = null
+  fun getPunctuations(productId: Long) = appDatabase.catalogDao().getPunctuations(productId)
 
-    private const val DATABASE_NAME = "ajv-cappa-db"
+  fun insertAllProducts(vararg products: ProductItem) = appDatabase.catalogDao().insertAllProducts(*products)
 
-    fun getInstance(context: Context): AppDatabase {
-      return instance ?: synchronized(this) {
-        instance ?: buildDatabase(context).also { instance = it }
-      }
-    }
+  fun insertAllPunctuations(vararg punctuations: ProductItemPoint) =
+    appDatabase.catalogDao().insertAllPunctuations(*punctuations)
 
-    private fun buildDatabase(
-      context: Context
-    ): AppDatabase =
-      Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
-  }
+  fun deleteAllProducts() = appDatabase.catalogDao().deleteAllProducts()
+
+  fun deleteAllPunctuations() = appDatabase.catalogDao().deleteAllPunctuations()
+
 }
