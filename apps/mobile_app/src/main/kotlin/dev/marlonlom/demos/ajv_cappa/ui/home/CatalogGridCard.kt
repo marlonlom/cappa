@@ -38,16 +38,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import timber.log.Timber
 import java.util.Locale
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun CatalogItemCard(
-  catalogItem: CatalogItem,
+  catalogItem: ProductItem,
   gridItemHeight: Dp,
-  onCardClicked: (CatalogItem) -> Unit
+  onCardClicked: (ProductItem) -> Unit
 ) {
   Card(
     shape = MaterialTheme.shapes.medium,

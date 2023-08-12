@@ -25,10 +25,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
 import dev.marlonlom.demos.ajv_cappa.ui.detail.DetailRoute
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
@@ -38,8 +40,9 @@ fun HomeRoute(
   windowSizeClass: WindowSizeClass,
   uiState: CatalogUiState,
   modifier: Modifier = Modifier,
-  navigateToProductDetailRoute: (Long) -> Unit,
-  selectedItem: CatalogItem?
+  selectedItem: ProductItem?,
+  productItemPoints: List<ProductItemPoint>,
+  navigateToProductDetailRoute: (Long) -> Unit
 ) {
 
   when (uiState) {
@@ -64,7 +67,8 @@ fun HomeRoute(
             Column(modifier = Modifier.fillMaxWidth()) {
               DetailRoute(
                 windowSizeClass = windowSizeClass,
-                catalogItem = selectedItem!!
+                catalogItem = selectedItem!!,
+                punctuations = productItemPoints
               )
             }
           }
@@ -73,7 +77,8 @@ fun HomeRoute(
         (selectedItem != null) and !MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> {
           DetailRoute(
             windowSizeClass = windowSizeClass,
-            catalogItem = selectedItem!!
+            catalogItem = selectedItem!!,
+            punctuations = productItemPoints
           )
         }
 
@@ -89,6 +94,8 @@ fun HomeRoute(
 
     is CatalogUiState.Error -> TODO()
 
-    CatalogUiState.Loading -> TODO()
+    CatalogUiState.Loading -> {
+      CircularProgressIndicator()
+    }
   }
 }
