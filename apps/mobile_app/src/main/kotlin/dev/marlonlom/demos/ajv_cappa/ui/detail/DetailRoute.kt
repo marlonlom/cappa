@@ -74,11 +74,12 @@ fun DetailScreen(windowSizeClass: WindowSizeClass, catalogItem: ProductItem, pun
     else -> PaddingValues(horizontal = 60.dp)
   }
 
-  when {
-    windowSizeClass.isCompactWidth -> {
-      DetailContentPortrait(catalogItem, punctuations, paddingValues)
-    }
+  val columnsCount = when {
+    windowSizeClass.isCompactWidth -> 2
+    else -> 3
   }
+
+  DetailContentPortrait(catalogItem, punctuations, paddingValues, columnsCount)
 }
 
 @Composable
@@ -159,13 +160,14 @@ fun ProductPointsGridItem(punctuation: ProductItemPoint) {
 fun DetailContentPortrait(
   catalogItem: ProductItem,
   punctuations: List<ProductItemPoint>,
-  paddingValues: PaddingValues
+  paddingValues: PaddingValues,
+  columnsCount: Int
 ) {
   LazyVerticalGrid(
     modifier = Modifier
       .fillMaxWidth()
       .padding(paddingValues),
-    columns = GridCells.Fixed(2),
+    columns = GridCells.Fixed(columnsCount),
     contentPadding = PaddingValues(16.dp),
     horizontalArrangement = Arrangement.spacedBy(20.dp),
     verticalArrangement = Arrangement.spacedBy(10.dp)
