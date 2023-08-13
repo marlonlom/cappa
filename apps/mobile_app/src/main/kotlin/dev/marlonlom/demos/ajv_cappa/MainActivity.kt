@@ -28,7 +28,7 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
-import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
+import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogRepository
 import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffold
@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
       val catalogViewModel: CatalogViewModel = viewModel(
         factory = CatalogViewModel.provideFactory(
           CatalogRepository(
-            LocalDataSource(
+            LocalDataSourceImpl(
               AppDatabase.getInstance(
                 applicationContext
               )
