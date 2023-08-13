@@ -21,22 +21,21 @@
 
 package dev.marlonlom.demos.ajv_cappa.ui.common
 
+import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
-import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
-import dev.marlonlom.demos.ajv_cappa.remote.data.Punctuation
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CatalogViewModelTest {
+internal class CatalogViewModelTest {
 
   @get:Rule
   val mainDispatcherRule = MainDispatcherRule()
@@ -45,7 +44,13 @@ class CatalogViewModelTest {
 
   @Before
   fun setUp() {
-    viewModel = CatalogViewModel(CatalogDataService())
+    viewModel = CatalogViewModel(
+      CatalogRepository(
+        FakeLocalDataSource(
+          CatalogDataService()
+        )
+      )
+    )
   }
 
   @Test
@@ -65,16 +70,10 @@ class CatalogViewModelTest {
 
   @Test
   fun shouldCheckUiStateSingleValueExists() = runTest {
-    val expectedItem = CatalogItem(
+    val expectedItem = ProductItem(
       id = 15396L,
       title = "Granizado",
       picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
-      punctuations = listOf(
-        Punctuation(
-          label = "Mediano",
-          pointsQty = 2225
-        )
-      )
     )
 
     val uiState = viewModel.uiState
@@ -83,7 +82,7 @@ class CatalogViewModelTest {
       is CatalogUiState.Home -> {
         val home = uiState.value as CatalogUiState.Home
         viewModel.updateSelectedItemId(expectedItem.id)
-        val catalogItem = viewModel.fetchSingle()
+        val catalogItem = viewModel.fetchSingle().first()
         assertTrue(home.list.isNotEmpty())
         assertNotNull(catalogItem)
         assertEquals(expectedItem, catalogItem)
@@ -94,12 +93,11 @@ class CatalogViewModelTest {
   }
 
   @Test
-  fun shouldValidateExpectedCatalogItemNotExist() {
-    val expectedItem = CatalogItem(
+  fun shouldValidateExpectedCatalogItemNotExist() = runTest {
+    val expectedItem = ProductItem(
       id = 15996L,
       title = "Loading",
-      picture = "https://nopic.com/img/null.jpg",
-      punctuations = listOf()
+      picture = "https://nopic.com/img/null.jpg"
     )
     val uiState = viewModel.uiState
     assertNotNull(uiState)
@@ -107,9 +105,10 @@ class CatalogViewModelTest {
       is CatalogUiState.Home -> {
         val home = uiState.value as CatalogUiState.Home
         viewModel.updateSelectedItemId(expectedItem.id)
-        val catalogItem = viewModel.fetchSingle()
+        val catalogItem = viewModel.fetchSingle().first()
         assertTrue(home.list.isNotEmpty())
-        assertNull(catalogItem)
+        assertNotNull(catalogItem)
+        assertEquals(FakeLocalDataSource.NONE, catalogItem)
         assertNotEquals(expectedItem, catalogItem)
       }
 
