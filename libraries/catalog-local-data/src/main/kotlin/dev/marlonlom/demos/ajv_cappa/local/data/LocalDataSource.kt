@@ -21,30 +21,48 @@
 
 package dev.marlonlom.demos.ajv_cappa.local.data
 
+import kotlinx.coroutines.flow.Flow
+
 /**
- * Local data source class.
+ *  Local data source concrete implementation class.
+ *
+ *  @author marlonlom
+ */
+interface LocalDataSource {
+
+  fun getAllProducts(): Flow<List<ProductItem>>
+  fun getProduct(productId: Long): Flow<ProductItem>
+  fun getPunctuations(productId: Long): Flow<List<ProductItemPoint>>
+  fun insertAllProducts(vararg products: ProductItem)
+  fun insertAllPunctuations(vararg punctuations: ProductItemPoint)
+  fun deleteAllProducts()
+  fun deleteAllPunctuations()
+}
+
+/**
+ * Local data source concrete implementation class.
  *
  * @author marlonlom
  *
  * @property appDatabase app database singleton instance.
  */
-class LocalDataSource(
+class LocalDataSourceImpl(
   private val appDatabase: AppDatabase
-) {
+) : LocalDataSource {
 
-  fun getAllProducts() = appDatabase.catalogDao().getProducts()
+  override fun getAllProducts() = appDatabase.catalogDao().getProducts()
 
-  fun getProduct(productId: Long) = appDatabase.catalogDao().getProduct(productId)
+  override fun getProduct(productId: Long) = appDatabase.catalogDao().getProduct(productId)
 
-  fun getPunctuations(productId: Long) = appDatabase.catalogDao().getPunctuations(productId)
+  override fun getPunctuations(productId: Long) = appDatabase.catalogDao().getPunctuations(productId)
 
-  fun insertAllProducts(vararg products: ProductItem) = appDatabase.catalogDao().insertAllProducts(*products)
+  override fun insertAllProducts(vararg products: ProductItem) = appDatabase.catalogDao().insertAllProducts(*products)
 
-  fun insertAllPunctuations(vararg punctuations: ProductItemPoint) =
+  override fun insertAllPunctuations(vararg punctuations: ProductItemPoint) =
     appDatabase.catalogDao().insertAllPunctuations(*punctuations)
 
-  fun deleteAllProducts() = appDatabase.catalogDao().deleteAllProducts()
+  override fun deleteAllProducts() = appDatabase.catalogDao().deleteAllProducts()
 
-  fun deleteAllPunctuations() = appDatabase.catalogDao().deleteAllPunctuations()
+  override fun deleteAllPunctuations() = appDatabase.catalogDao().deleteAllPunctuations()
 
 }
