@@ -28,6 +28,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
+import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
@@ -63,7 +64,8 @@ class CatalogDatabaseWorker(
     }.flatten()
 
     val appDatabase = AppDatabase.getInstance(applicationContext)
-    with(LocalDataSource(appDatabase)) {
+    val localDataSource: LocalDataSource = LocalDataSourceImpl(appDatabase)
+    with(localDataSource) {
       deleteAllPunctuations()
       deleteAllProducts()
       insertAllProducts(*dbProductItems.toTypedArray())
