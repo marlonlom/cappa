@@ -25,6 +25,7 @@ import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -105,11 +106,58 @@ internal class CatalogViewModelTest {
       is CatalogUiState.Home -> {
         val home = uiState.value as CatalogUiState.Home
         viewModel.updateSelectedItemId(expectedItem.id)
-        val catalogItem = viewModel.fetchSingle().first()
+        val catalogItem = viewModel.fetchSingle().last()
         assertTrue(home.list.isNotEmpty())
         assertNotNull(catalogItem)
         assertEquals(FakeLocalDataSource.NONE, catalogItem)
         assertNotEquals(expectedItem, catalogItem)
+      }
+
+      else -> fail()
+    }
+  }
+
+  @Test
+  fun shouldCheckUiStateSingleValuePunctuationListExists() = runTest {
+    val expectedItem = ProductItem(
+      id = 15396L,
+      title = "Granizado",
+      picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
+    )
+
+    val uiState = viewModel.uiState
+    assertNotNull(uiState)
+    when (uiState.value) {
+      is CatalogUiState.Home -> {
+        val home = uiState.value as CatalogUiState.Home
+        viewModel.updateSelectedItemId(expectedItem.id)
+        val itemPoints = viewModel.fetchPoints().first()
+        assertTrue(home.list.isNotEmpty())
+        assertNotNull(itemPoints)
+        assertTrue(itemPoints.isNotEmpty())
+      }
+
+      else -> fail()
+    }
+  }
+
+  @Test
+  fun shouldCheckUiStateSingleValuePunctuationListNotExist() = runTest {
+    val expectedItem = ProductItem(
+      id = 15996L,
+      title = "Loading",
+      picture = "https://nopic.com/img/null.jpg"
+    )
+    val uiState = viewModel.uiState
+    assertNotNull(uiState)
+    when (uiState.value) {
+      is CatalogUiState.Home -> {
+        val home = uiState.value as CatalogUiState.Home
+        viewModel.updateSelectedItemId(expectedItem.id)
+        val itemPoints = viewModel.fetchPoints().first()
+        assertTrue(home.list.isNotEmpty())
+        assertNotNull(itemPoints)
+        assertTrue(itemPoints.isEmpty())
       }
 
       else -> fail()
