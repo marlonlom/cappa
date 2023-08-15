@@ -49,9 +49,6 @@ fun HomeRoute(
     is CatalogUiState.Home -> {
       val catalogItems = uiState.list
       when {
-        catalogItems.isEmpty() -> {
-          TODO()
-        }
 
         (selectedItem != null) and MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> {
           Row(
