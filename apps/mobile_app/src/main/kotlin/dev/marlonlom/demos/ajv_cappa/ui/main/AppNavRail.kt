@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
+import timber.log.Timber
 
 
 @Composable
@@ -53,6 +54,9 @@ fun AppNavRail(
             is Destination.Home -> navigationActions.navigateToHome()
             is Destination.Search -> navigationActions.navigateToSearch()
             is Destination.Settings -> navigationActions.navigateToSettings()
+            else -> {
+              Timber.d("[AppNavRail] Nothing happen here.")
+            }
           }
         },
         icon = {
