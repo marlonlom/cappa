@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
+import timber.log.Timber
 
 @Composable
 fun MainBottomBar(
@@ -56,6 +57,9 @@ fun MainBottomBar(
             is Destination.Home -> navigationActions.navigateToHome()
             is Destination.Search -> navigationActions.navigateToSearch()
             is Destination.Settings -> navigationActions.navigateToSettings()
+            else -> {
+              Timber.d("[MainBottomBar] Nothing happen here.")
+            }
           }
         },
         icon = {
