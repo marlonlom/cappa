@@ -24,6 +24,7 @@ package dev.marlonlom.demos.ajv_cappa.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -65,25 +66,28 @@ sealed class Destination(
     icon = Icons.Rounded.Settings
   )
 
+  object Detail : Destination(
+    route = "detail/{$itemIdArg}",
+    title = R.string.destination_detail,
+    icon = Icons.Rounded.Info
+  ) {
+    fun createRoute(itemId: Long) = "detail/$itemId"
 
-  companion object {
-
-    private const val defaultId = -1L
-    const val itemIdArg = "itemId"
-    fun listOf() = listOf(Home, Search, Settings)
-
-    val detailArguments = listOf(navArgument(itemIdArg) {
+    val arguments = listOf(navArgument(itemIdArg) {
       type = NavType.LongType
       defaultValue = defaultId
     })
 
-    fun routeWithDetail(
-      parentRoute: String,
-      itemId: Long = defaultId
-    ) = when (itemId) {
-      defaultId -> parentRoute
-      else -> "$parentRoute?itemId={$itemId}"
-    }
+  }
+
+
+  companion object {
+
+    private const val defaultId = -1L
+
+    const val itemIdArg = "itemId"
+
+    fun listOf() = listOf(Home, Search, Settings)
 
   }
 }
