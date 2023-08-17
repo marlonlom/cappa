@@ -23,14 +23,13 @@ package dev.marlonlom.demos.ajv_cappa.catalog.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.flow.flow
 
 
 class CatalogDetailViewModel(
   private val repository: CatalogDetailRepository
 ) : ViewModel() {
 
-  fun find(itemId: Long) = flow { emit(repository.find(itemId)) }
+  fun find(itemId: Long) = repository.find(itemId)
 
   companion object {
 

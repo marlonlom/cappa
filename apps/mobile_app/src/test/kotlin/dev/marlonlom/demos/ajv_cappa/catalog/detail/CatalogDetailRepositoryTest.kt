@@ -24,6 +24,7 @@ package dev.marlonlom.demos.ajv_cappa.catalog.detail
 import dev.marlonlom.demos.ajv_cappa.local.data.FakeLocalDataSource
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -49,7 +50,7 @@ internal class CatalogDetailRepositoryTest {
       title = "Granizado",
       picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
     )
-    val foundProduct = repository.find(expectedItem.id)
+    val foundProduct = repository.find(expectedItem.id).first()
     Assert.assertNotNull(foundProduct)
     Assert.assertEquals(expectedItem, foundProduct!!.product)
     Assert.assertTrue(foundProduct.points.isNotEmpty())
@@ -57,7 +58,7 @@ internal class CatalogDetailRepositoryTest {
 
   @Test
   fun shouldReturnNullProductItem() = runTest {
-    val foundProduct = repository.find(1L)
+    val foundProduct = repository.find(1L).first()
     Assert.assertNull(foundProduct)
   }
 
