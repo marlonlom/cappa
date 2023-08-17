@@ -48,14 +48,14 @@ sealed class Destination(
   val icon: ImageVector
 ) {
 
-  object Home : Destination(
-    route = "home",
+  object CatalogList : Destination(
+    route = "catalog",
     title = R.string.destination_home,
     icon = Icons.Rounded.Home
   )
 
-  object Search : Destination(
-    route = "search",
+  object CatalogSearch : Destination(
+    route = "catalog/search",
     title = R.string.destination_search,
     icon = Icons.Rounded.Search
   )
@@ -67,11 +67,11 @@ sealed class Destination(
   )
 
   object Detail : Destination(
-    route = "detail/{$itemIdArg}",
+    route = "catalog/{$itemIdArg}",
     title = R.string.destination_detail,
     icon = Icons.Rounded.Info
   ) {
-    fun createRoute(itemId: Long) = "detail/$itemId"
+    fun createRoute(itemId: Long) = "catalog/$itemId"
 
     val arguments = listOf(navArgument(itemIdArg) {
       type = NavType.LongType
@@ -87,7 +87,7 @@ sealed class Destination(
 
     const val itemIdArg = "itemId"
 
-    fun listOf() = listOf(Home, Search, Settings)
+    fun listOf() = listOf(CatalogList, CatalogSearch, Settings)
 
   }
 }
@@ -105,7 +105,7 @@ class AppNavigationActions(private val navController: NavHostController) {
    */
   fun navigateToHome() {
     clearNavigationArguments()
-    navController.navigate(route = Destination.Home.route) {
+    navController.navigate(route = Destination.CatalogList.route) {
       useDefaultNavOptions(navController)
     }
   }
@@ -116,7 +116,7 @@ class AppNavigationActions(private val navController: NavHostController) {
    */
   fun navigateToSearch() {
     clearNavigationArguments()
-    navController.navigate(route = Destination.Search.route) {
+    navController.navigate(route = Destination.CatalogSearch.route) {
       useDefaultNavOptions(navController)
     }
   }

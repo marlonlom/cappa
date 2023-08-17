@@ -24,49 +24,64 @@ package dev.marlonlom.demos.ajv_cappa.ui.navigation
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
-import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
-import dev.marlonlom.demos.ajv_cappa.ui.home.HomeRoute
-import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination.Companion.detailArguments
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetail
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailRoute
+import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListRoute
+import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
+import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 
 @Composable
 fun NavigationHost(
-  modifier: Modifier = Modifier,
   navController: NavHostController,
   windowSizeClass: WindowSizeClass,
-  uiState: CatalogUiState,
-  selectedItem: ProductItem?,
-  productItemPoints: List<ProductItemPoint>,
-  navigateToProductDetailRoute: (Long) -> Unit
+  listUiState: CatalogListState,
+  gotoDetailRoute: (Long) -> Unit,
+  findSingleItem: (Long) -> Flow<CatalogDetail?>,
+  modifier: Modifier = Modifier
 ) {
 
   NavHost(
     navController = navController,
-    startDestination = Destination.Home.route,
+    startDestination = Destination.CatalogList.route,
   ) {
     composable(
-      route = Destination.routeWithDetail(Destination.Home.route),
-      arguments = detailArguments
+      route = Destination.CatalogList.route
     ) {
-
-      HomeRoute(
+      CatalogListRoute(
         windowSizeClass = windowSizeClass,
         modifier = modifier,
-        uiState = uiState,
-        selectedItem = selectedItem,
-        productItemPoints = productItemPoints,
-        navigateToProductDetailRoute = navigateToProductDetailRoute
+        listUiState = listUiState,
+        gotoDetailRoute = gotoDetailRoute
       )
     }
 
     composable(Destination.Settings.route) {
       SettingsRoute(
         windowSizeClass = windowSizeClass,
+        modifier = modifier
+      )
+    }
+
+    composable(
+      route = Destination.Detail.route,
+      arguments = Destination.Detail.arguments
+    ) { backStackEntry ->
+
+      val itemId = backStackEntry.arguments!!.getLong(Destination.itemIdArg)
+
+      /* TODO: check why findSingleItem() is returning state with null value :( */
+      val detailState = findSingleItem(itemId).collectAsStateWithLifecycle(null)
+      Timber.d("[NavigationHost>CatalogDetailRoute] itemId=$itemId; detailState=${detailState.value}")
+
+      CatalogDetailRoute(
+        windowSizeClass = windowSizeClass,
+        catalogItemId = itemId,
         modifier = modifier
       )
     }
