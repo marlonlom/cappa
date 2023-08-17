@@ -21,15 +21,19 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.detail
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -42,6 +46,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -61,13 +66,24 @@ import dev.marlonlom.demos.ajv_cappa.ui.main.isCompactWidth
 @Composable
 fun CatalogDetailRoute(
   windowSizeClass: WindowSizeClass,
-  catalogItemId: Long?,
-  modifier: Modifier = Modifier
+  catalogItem: CatalogDetail?,
+  onBackPressed: () -> Unit
 ) {
-  DetailScreen(
-    windowSizeClass = windowSizeClass,
-    catalogDetail = null
-  )
+  if (catalogItem != null) {
+    DetailScreen(
+      windowSizeClass = windowSizeClass,
+      catalogDetail = catalogItem
+    )
+  } else {
+    Text(
+      text = "Catalog item not found :( ",
+      modifier = Modifier.fillMaxSize(),
+      textAlign = TextAlign.Center
+    )
+  }
+  BackHandler {
+    onBackPressed()
+  }
 }
 
 
@@ -96,24 +112,34 @@ fun DetailScreen(
     else -> 200.dp
   }
 
+  val isHeadingLandscape = when {
+    MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> true
+    MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> true
+    else -> false
+  }
+
   DetailContent(
     catalogItem = catalogDetail!!.product,
     punctuations = catalogDetail.points,
     paddingValues = paddingValues,
     columnsCount = columnsCount,
-    imageSize = productImageSize
+    imageSize = productImageSize,
+    isHeadingLandscape = isHeadingLandscape
   )
 
 }
 
 @Composable
-private fun ProductTitleText(catalogItem: ProductItem) {
+private fun ProductTitleText(
+  catalogItem: ProductItem,
+  titleTextAlign: TextAlign = TextAlign.Center
+) {
   Text(
     text = catalogItem.title.toSentenceCase,
     modifier = Modifier
       .fillMaxWidth()
-      .padding(horizontal = 20.dp, vertical = 10.dp),
-    textAlign = TextAlign.Center,
+      .padding(horizontal = 20.dp, vertical = 5.dp),
+    textAlign = titleTextAlign,
     style = MaterialTheme.typography.headlineMedium,
     maxLines = 2,
     minLines = 1
@@ -126,13 +152,13 @@ private fun ProductAsyncImage(catalogItem: ProductItem, imageSize: Dp) {
     model = catalogItem.picture,
     contentDescription = null,
     loading = {
-      CircularProgressIndicator()
+      CircularProgressIndicator(Modifier.size(48.dp))
     },
     contentScale = ContentScale.Crop,
     modifier = Modifier
       .width(imageSize)
       .height(imageSize)
-      .padding(all = 20.dp)
+      .padding(all = 10.dp)
       .clip(CircleShape)
       .border(
         width = 2.dp,
@@ -147,7 +173,7 @@ private fun PointsTitleText() {
   Text(
     modifier = Modifier
       .fillMaxWidth()
-      .paddingFromBaseline(top = 40.dp, bottom = 8.dp),
+      .paddingFromBaseline(top = 20.dp, bottom = 8.dp),
     text = stringResource(id = R.string.detail_text_points),
     maxLines = 1,
     textAlign = TextAlign.Center,
@@ -181,12 +207,42 @@ fun ProductPointsGridItem(punctuation: ProductItemPoint) {
 }
 
 @Composable
+private fun CatalogDetailHeading(
+  catalogItem: ProductItem,
+  imageSize: Dp,
+  isHeadingLandscape: Boolean
+) {
+  if (isHeadingLandscape) {
+    Row(
+      modifier = Modifier
+        .fillMaxWidth(0.5f)
+        .padding(20.dp),
+      horizontalArrangement = Arrangement.Center,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      ProductAsyncImage(catalogItem, imageSize)
+      ProductTitleText(catalogItem, TextAlign.Start)
+    }
+  } else {
+    Column(
+      modifier = Modifier.padding(top = 40.dp),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      ProductAsyncImage(catalogItem, imageSize)
+      ProductTitleText(catalogItem)
+    }
+  }
+}
+
+@Composable
 fun DetailContent(
   catalogItem: ProductItem,
   punctuations: List<ProductItemPoint>,
   paddingValues: PaddingValues,
   columnsCount: Int,
-  imageSize: Dp
+  imageSize: Dp,
+  isHeadingLandscape: Boolean = false
 ) {
   LazyVerticalGrid(
     modifier = Modifier
@@ -198,12 +254,12 @@ fun DetailContent(
     verticalArrangement = Arrangement.spacedBy(10.dp)
   ) {
 
-    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-      ProductAsyncImage(catalogItem, imageSize)
-    }
-
-    item(span = { GridItemSpan(maxCurrentLineSpan) }) {
-      ProductTitleText(catalogItem)
+    item(span = { GridItemSpan(maxLineSpan) }) {
+      CatalogDetailHeading(
+        catalogItem = catalogItem,
+        imageSize = imageSize,
+        isHeadingLandscape = isHeadingLandscape
+      )
     }
 
     item(span = { GridItemSpan(maxLineSpan) }) {
