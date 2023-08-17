@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package dev.marlonlom.demos.ajv_cappa.domain.workers
+package dev.marlonlom.demos.ajv_cappa.ui.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
