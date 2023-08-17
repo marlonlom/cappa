@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package  dev.marlonlom.demos.ajv_cappa.ui.common
+package  dev.marlonlom.demos.ajv_cappa.local.data
 
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
