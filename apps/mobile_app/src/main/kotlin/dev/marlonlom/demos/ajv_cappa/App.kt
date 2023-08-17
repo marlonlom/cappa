@@ -23,7 +23,7 @@ package dev.marlonlom.demos.ajv_cappa
 
 import android.app.Application
 import androidx.work.Configuration
-import dev.marlonlom.demos.ajv_cappa.domain.workers.CatalogDatabaseWorker
+import dev.marlonlom.demos.ajv_cappa.ui.workers.CatalogDatabaseWorker
 import timber.log.Timber
 
 class App : Application(), Configuration.Provider {
