@@ -28,4 +28,5 @@
   <string name="home_title_enjoy">Enjoy</string>
   <string name="home_title_exclusive_items">Exclusive products</string>
   <string name="detail_text_points">Points</string>
+  <string name="home_text_list_loading">"Catalog is loading ... "</string>
 </resources>
