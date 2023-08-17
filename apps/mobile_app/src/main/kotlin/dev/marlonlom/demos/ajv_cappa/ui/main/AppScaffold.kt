@@ -39,10 +39,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogUiState
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel.Companion.NEGATIVE_ITEM_ID
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel.Companion.NONE
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
@@ -52,42 +50,34 @@ import timber.log.Timber
 @Composable
 fun MainScaffold(
   windowSizeClass: WindowSizeClass,
-  viewModel: CatalogViewModel,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  catalogListViewModel: CatalogListViewModel,
+  catalogDetailViewModel: CatalogDetailViewModel
 ) {
-  val state by viewModel.uiState.collectAsStateWithLifecycle()
   val navController: NavHostController = rememberNavController()
   val navBackStackEntry by navController.currentBackStackEntryAsState()
   val currentRoute =
-    navBackStackEntry?.destination?.route ?: Destination.Home.route
+    navBackStackEntry?.destination?.route ?: Destination.CatalogList.route
   val navigationActions = AppNavigationActions(navController)
-  val productItem by viewModel.fetchSingle().collectAsStateWithLifecycle(initialValue = NONE)
-  val productItemPoints by viewModel.fetchPoints().collectAsStateWithLifecycle(initialValue = emptyList())
-  val isDetailDestination = when (state) {
-    is CatalogUiState.Home -> {
-      (state as CatalogUiState.Home).selectedId != NEGATIVE_ITEM_ID
-    }
+  val isDetailDestination = !Destination.listOf().map { it.route }.contains(currentRoute)
+  val catalogListState = catalogListViewModel.uiState.collectAsStateWithLifecycle()
 
-    else -> false
+  val onNavigationIconClicked: () -> Unit = {
+    navController.popBackStack()
   }
-
-  Timber.d("[MainScaffold] isDetailDestination=$isDetailDestination")
 
   Scaffold(
     modifier = modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colorScheme.surface),
+      .fillMaxWidth()
+      .background(MaterialTheme.colorScheme.surface),
     topBar = {
       if (MainScaffoldUtil.canShowTopBar(windowSizeClass, isDetailDestination)) {
         AppTopBar(
-          onNavigationIconClicked = {
-            viewModel.updateSelectedItemId(NEGATIVE_ITEM_ID)
-            navController.popBackStack()
-          }
+          onNavigationIconClicked = onNavigationIconClicked
         )
       }
     },
-    content = {
+    content = { paddingValues ->
       Row {
         if (MainScaffoldUtil.canShowNavigationRail(windowSizeClass, isDetailDestination)) {
           AppNavRail(
@@ -102,20 +92,21 @@ fun MainScaffold(
           else Modifier.fillMaxWidth()
 
         NavigationHost(
-          modifier = hostModifier.padding(it),
+          modifier = hostModifier.padding(paddingValues),
           navController = navController,
           windowSizeClass = windowSizeClass,
-          uiState = state,
-          selectedItem = productItem,
-          productItemPoints = productItemPoints
-        ) { catalogItemId ->
-          viewModel.updateSelectedItemId(catalogItemId)
-          val routeWithDetail = Destination.routeWithDetail(Destination.Home.route, catalogItemId)
-          Timber.d("[MainScaffold] routeWithDetail=$routeWithDetail")
-          navController.navigate(
-            route = routeWithDetail
-          )
-        }
+          listUiState = catalogListState.value,
+          onBackPressed = onNavigationIconClicked,
+          gotoDetailRoute = { catalogItemId ->
+            val detailRoutePath = Destination.Detail.createRoute(catalogItemId)
+            Timber.d("[MainScaffold] routeWithDetail=$detailRoutePath")
+            navController.navigate(detailRoutePath)
+          },
+          findSingleItem = { catalogItemId ->
+            Timber.d("[MainScaffold.findSingleItem] catalogItemId=$catalogItemId")
+            return@NavigationHost catalogDetailViewModel.find(catalogItemId)
+          }
+        )
       }
     },
     bottomBar = {
