@@ -21,13 +21,13 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.list
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
+import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 import timber.log.Timber
-
 
 @Composable
 fun CatalogListRoute(
@@ -36,15 +36,15 @@ fun CatalogListRoute(
   listUiState: CatalogListState,
   gotoDetailRoute: (Long) -> Unit,
 ) {
-  if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded) {
+  if (MainScaffoldUtil.isTabletLandscape(windowSizeClass)) {
     CatalogListDetailScreen(
       modifier = modifier,
-      uiState = listUiState,
-      onSelectedItem = { productId ->
-        val foundItem: ProductItem? = (listUiState as CatalogListState.Listing).list.find { it.id == productId }
-        Timber.d("[CatalogListRoute.CatalogListDetailScreen] foundItem=$foundItem")
-      }
-    )
+      windowSizeClass = windowSizeClass,
+      listUiState = listUiState
+    ) { productId ->
+      val foundItem: ProductItem? = (listUiState as CatalogListState.Listing).list.find { it.id == productId }
+      Timber.d("[CatalogListRoute.CatalogListDetailScreen] foundItem=$foundItem")
+    }
   } else {
     CatalogListScreen(
       modifier = modifier,
@@ -73,13 +73,20 @@ fun CatalogListScreen(
   )
 }
 
-
 @Composable
 fun CatalogListDetailScreen(
   modifier: Modifier,
-  uiState: CatalogListState,
+  windowSizeClass: WindowSizeClass,
+  listUiState: CatalogListState,
   selectedItemId: Long? = null,
   onSelectedItem: (Long) -> Unit
 ) {
-
+  Row {
+    CatalogVerticalGrid(
+      modifier = modifier,
+      windowSizeClass = windowSizeClass,
+      listUiState = listUiState,
+      onItemSelected = onSelectedItem
+    )
+  }
 }
