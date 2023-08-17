@@ -26,7 +26,8 @@ import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 /**
  * Data class definition for catalog item detail.
@@ -50,12 +51,18 @@ class CatalogDetailRepository(
   private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
 
-  suspend fun find(itemId: Long): CatalogDetail? {
+  fun find(itemId: Long): Flow<CatalogDetail?> {
     coroutineDispatcher.run {
-      val product = localDataSource.getProduct(itemId).first()
-      if (product.id == -1L) return null
-      val points = localDataSource.getPunctuations(itemId).first()
-      return CatalogDetail(product, points)
+      return combine(
+        localDataSource.getProduct(itemId),
+        localDataSource.getPunctuations(itemId)
+      ) { product, points ->
+        if (product.id == -1L) {
+          null
+        } else {
+          CatalogDetail(product, points)
+        }
+      }
     }
   }
 
