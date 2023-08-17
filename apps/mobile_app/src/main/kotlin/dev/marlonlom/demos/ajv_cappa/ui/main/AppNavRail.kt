@@ -51,8 +51,8 @@ fun AppNavRail(
         selected = currentRoute == it.route,
         onClick = {
           when (it) {
-            is Destination.Home -> navigationActions.navigateToHome()
-            is Destination.Search -> navigationActions.navigateToSearch()
+            is Destination.CatalogList -> navigationActions.navigateToHome()
+            is Destination.CatalogSearch -> navigationActions.navigateToSearch()
             is Destination.Settings -> navigationActions.navigateToSettings()
             else -> {
               Timber.d("[AppNavRail] Nothing happen here.")
