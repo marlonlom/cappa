@@ -54,8 +54,8 @@ fun MainBottomBar(
         selected = currentRoute == it.route,
         onClick = {
           when (it) {
-            is Destination.Home -> navigationActions.navigateToHome()
-            is Destination.Search -> navigationActions.navigateToSearch()
+            is Destination.CatalogList -> navigationActions.navigateToHome()
+            is Destination.CatalogSearch -> navigationActions.navigateToSearch()
             is Destination.Settings -> navigationActions.navigateToSettings()
             else -> {
               Timber.d("[MainBottomBar] Nothing happen here.")
@@ -85,7 +85,7 @@ fun MainBottomBar(
 @Composable
 fun MainBottomBarPreview() {
   MainBottomBar(
-    currentRoute = Destination.Home.route,
+    currentRoute = Destination.CatalogList.route,
     navigationActions = AppNavigationActions(rememberNavController())
   )
 }
