@@ -67,12 +67,15 @@ class CatalogListViewModel(
 
   private fun fetchList() {
     viewModelScope.launch {
+      /*_uiState.value = CatalogListState.Empty*/
+
       val products = repository.getAllProducts()
       products.collect {
         _uiState.value = when {
           it.isEmpty() -> CatalogListState.Empty
           else -> CatalogListState.Listing(it)
         }
+
       }
     }
   }
