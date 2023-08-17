@@ -27,4 +27,5 @@
   <string name="home_title_enjoy">Disfruta</string>
   <string name="home_title_exclusive_items">Productos exclusivos</string>
   <string name="detail_text_points">Puntos</string>
+  <string name="home_text_list_loading">"El catálogo se está cargando..."</string>
 </resources>

@@ -27,18 +27,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.marlonlom.demos.ajv_cappa.R
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 
@@ -108,13 +114,30 @@ fun CatalogVerticalGrid(
       }
 
       CatalogListState.Loading -> {
-        Text(
-          text = "Catalog is loading ... ",
-          modifier = Modifier.fillMaxWidth(),
-          textAlign = TextAlign.Center
-        )
+        CatalogListLoadingText()
       }
     }
 
+  }
+}
+
+@Composable
+private fun CatalogListLoadingText() {
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(20.dp),
+    verticalArrangement = Arrangement.SpaceBetween,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    CircularProgressIndicator(modifier = Modifier.size(48.dp))
+
+    Text(
+      text = stringResource(R.string.home_text_list_loading),
+      modifier = Modifier
+        .fillMaxWidth()
+        .paddingFromBaseline(top = 40.dp, bottom = 20.dp),
+      textAlign = TextAlign.Center
+    )
   }
 }
