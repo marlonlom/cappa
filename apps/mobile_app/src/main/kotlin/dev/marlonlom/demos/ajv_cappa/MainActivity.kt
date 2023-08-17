@@ -27,10 +27,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailRepository
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListRepository
+import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogRepository
-import dev.marlonlom.demos.ajv_cappa.ui.common.CatalogViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffold
 import dev.marlonlom.demos.ajv_cappa.ui.theme.CappaTheme
 import timber.log.Timber
@@ -42,21 +44,38 @@ class MainActivity : ComponentActivity() {
     setContent {
       val windowSizeClass = calculateWindowSizeClass(this)
       Timber.d("[MainActivity] windowSizeClass=$windowSizeClass")
-      val catalogViewModel: CatalogViewModel = viewModel(
-        factory = CatalogViewModel.provideFactory(
-          CatalogRepository(
-            LocalDataSourceImpl(
-              AppDatabase.getInstance(
-                applicationContext
-              )
-            )
+
+      val appDatabase = AppDatabase.getInstance(
+        context = applicationContext
+      )
+
+      val localDataSource = LocalDataSourceImpl(
+        appDatabase = appDatabase
+      )
+
+      val listRepository = CatalogListRepository(
+        localDataSource = localDataSource
+      )
+
+      val catalogListViewModel: CatalogListViewModel = viewModel(
+        factory = CatalogListViewModel.factory(
+          repository = listRepository
+        )
+      )
+
+      val catalogDetailViewModel: CatalogDetailViewModel = viewModel(
+        factory = CatalogDetailViewModel.factory(
+          repository = CatalogDetailRepository(
+            localDataSource = localDataSource
           )
         )
       )
+
       CappaTheme {
         MainScaffold(
           windowSizeClass = windowSizeClass,
-          viewModel = catalogViewModel
+          catalogListViewModel = catalogListViewModel,
+          catalogDetailViewModel = catalogDetailViewModel,
         )
       }
     }
