@@ -41,6 +41,7 @@ fun NavigationHost(
   navController: NavHostController,
   windowSizeClass: WindowSizeClass,
   listUiState: CatalogListState,
+  onBackPressed: () -> Unit,
   gotoDetailRoute: (Long) -> Unit,
   findSingleItem: (Long) -> Flow<CatalogDetail?>,
   modifier: Modifier = Modifier
@@ -75,14 +76,13 @@ fun NavigationHost(
 
       val itemId = backStackEntry.arguments!!.getLong(Destination.itemIdArg)
 
-      /* TODO: check why findSingleItem() is returning state with null value :( */
-      val detailState = findSingleItem(itemId).collectAsStateWithLifecycle(null)
-      Timber.d("[NavigationHost>CatalogDetailRoute] itemId=$itemId; detailState=${detailState.value}")
+      val catalogDetailState = findSingleItem(itemId).collectAsStateWithLifecycle(null)
+      Timber.d("[NavigationHost>CatalogDetailRoute] itemId=$itemId; detailState=${catalogDetailState.value}")
 
       CatalogDetailRoute(
+        onBackPressed = onBackPressed,
         windowSizeClass = windowSizeClass,
-        catalogItemId = itemId,
-        modifier = modifier
+        catalogItem = catalogDetailState.value
       )
     }
   }
