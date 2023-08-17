@@ -43,7 +43,7 @@ fun AppTopBar(
     navigationIcon = {
       IconButton(
         onClick = {
-          Timber.d("[AppTopBar] onBackIconClicked.")
+          Timber.d("[AppTopBar] onNavigationIconClicked.")
           onNavigationIconClicked()
         },
         enabled = true,
