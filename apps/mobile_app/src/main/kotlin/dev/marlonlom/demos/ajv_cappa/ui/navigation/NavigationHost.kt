@@ -24,7 +24,6 @@ package dev.marlonlom.demos.ajv_cappa.ui.navigation
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +32,6 @@ import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
-import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 @Composable
@@ -41,9 +39,10 @@ fun NavigationHost(
   navController: NavHostController,
   windowSizeClass: WindowSizeClass,
   listUiState: CatalogListState,
+  detailUiState: CatalogDetail?,
   onBackPressed: () -> Unit,
   gotoDetailRoute: (Long) -> Unit,
-  findSingleItem: (Long) -> Flow<CatalogDetail?>,
+  findSingleItem: (Long) -> Unit,
   modifier: Modifier = Modifier
 ) {
 
@@ -58,6 +57,8 @@ fun NavigationHost(
         windowSizeClass = windowSizeClass,
         modifier = modifier,
         listUiState = listUiState,
+        detailUiState = detailUiState,
+        findSingleItem = findSingleItem,
         gotoDetailRoute = gotoDetailRoute
       )
     }
@@ -73,16 +74,13 @@ fun NavigationHost(
       route = Destination.Detail.route,
       arguments = Destination.Detail.arguments
     ) { backStackEntry ->
-
       val itemId = backStackEntry.arguments!!.getLong(Destination.itemIdArg)
-
-      val catalogDetailState = findSingleItem(itemId).collectAsStateWithLifecycle(null)
-      Timber.d("[NavigationHost>CatalogDetailRoute] itemId=$itemId; detailState=${catalogDetailState.value}")
-
+      findSingleItem(itemId)
+      Timber.d("[NavigationHost>CatalogDetailRoute] itemId=$itemId; detailState=${detailUiState}")
       CatalogDetailRoute(
         onBackPressed = onBackPressed,
         windowSizeClass = windowSizeClass,
-        catalogItem = catalogDetailState.value
+        catalogItem = detailUiState
       )
     }
   }
