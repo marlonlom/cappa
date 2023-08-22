@@ -21,15 +21,34 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.detail
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-
+/**
+ * Catalog detail view model class.
+ *
+ * @author marlonlom
+ *
+ * @property repository catalog detail repository dependency
+ */
 class CatalogDetailViewModel(
   private val repository: CatalogDetailRepository
 ) : ViewModel() {
 
-  fun find(itemId: Long) = repository.find(itemId)
+  var detail: MutableState<CatalogDetail?> = mutableStateOf(null)
+    private set
+
+  suspend fun find(itemId: Long) {
+    viewModelScope.launch {
+      repository.find(itemId).collect {
+        detail.value = it
+      }
+    }
+  }
 
   companion object {
 
