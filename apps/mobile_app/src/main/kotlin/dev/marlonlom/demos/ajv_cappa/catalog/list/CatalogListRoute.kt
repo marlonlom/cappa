@@ -21,11 +21,14 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.list
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetail
+import dev.marlonlom.demos.ajv_cappa.catalog.detail.DetailScreen
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
 import timber.log.Timber
 
@@ -35,15 +38,17 @@ fun CatalogListRoute(
   windowSizeClass: WindowSizeClass,
   listUiState: CatalogListState,
   gotoDetailRoute: (Long) -> Unit,
+  findSingleItem: (Long) -> Unit,
+  detailUiState: CatalogDetail?,
 ) {
   if (MainScaffoldUtil.isTabletLandscape(windowSizeClass)) {
     CatalogListDetailScreen(
       modifier = modifier,
       windowSizeClass = windowSizeClass,
-      listUiState = listUiState
+      listUiState = listUiState,
+      detailUiState = detailUiState
     ) { productId ->
-      val foundItem: ProductItem? = (listUiState as CatalogListState.Listing).list.find { it.id == productId }
-      Timber.d("[CatalogListRoute.CatalogListDetailScreen] foundItem=$foundItem")
+      findSingleItem(productId)
     }
   } else {
     CatalogListScreen(
@@ -78,7 +83,7 @@ fun CatalogListDetailScreen(
   modifier: Modifier,
   windowSizeClass: WindowSizeClass,
   listUiState: CatalogListState,
-  selectedItemId: Long? = null,
+  detailUiState: CatalogDetail?,
   onSelectedItem: (Long) -> Unit
 ) {
   Row {
@@ -88,5 +93,15 @@ fun CatalogListDetailScreen(
       listUiState = listUiState,
       onItemSelected = onSelectedItem
     )
+    if (detailUiState != null) {
+      DetailScreen(
+        windowSizeClass = windowSizeClass,
+        catalogDetail = detailUiState
+      )
+    } else {
+      Column(
+        modifier = Modifier.fillMaxSize()
+      ) {}
+    }
   }
 }
