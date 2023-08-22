@@ -33,6 +33,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +45,7 @@ import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -54,6 +56,7 @@ fun MainScaffold(
   catalogListViewModel: CatalogListViewModel,
   catalogDetailViewModel: CatalogDetailViewModel
 ) {
+  val coroutineScope = rememberCoroutineScope()
   val navController: NavHostController = rememberNavController()
   val navBackStackEntry by navController.currentBackStackEntryAsState()
   val currentRoute =
@@ -96,6 +99,7 @@ fun MainScaffold(
           navController = navController,
           windowSizeClass = windowSizeClass,
           listUiState = catalogListState.value,
+          detailUiState = catalogDetailViewModel.detail.value,
           onBackPressed = onNavigationIconClicked,
           gotoDetailRoute = { catalogItemId ->
             val detailRoutePath = Destination.Detail.createRoute(catalogItemId)
@@ -104,7 +108,9 @@ fun MainScaffold(
           },
           findSingleItem = { catalogItemId ->
             Timber.d("[MainScaffold.findSingleItem] catalogItemId=$catalogItemId")
-            return@NavigationHost catalogDetailViewModel.find(catalogItemId)
+            coroutineScope.launch {
+              catalogDetailViewModel.find(catalogItemId)
+            }
           }
         )
       }
