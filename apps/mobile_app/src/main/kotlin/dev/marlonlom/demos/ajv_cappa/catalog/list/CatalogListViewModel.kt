@@ -32,9 +32,28 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Catalog ui state sealed class.
+ *
+ * @author marlonlom
+ *
+ */
 sealed class CatalogListState {
+  /**
+   * Catalog ui state as loading state object.
+   */
   object Loading : CatalogListState()
+
+  /**
+   * Catalog ui state as empty results object.
+   */
   object Empty : CatalogListState()
+
+  /**
+   * Catalog ui state as non empty list results data class.
+   *
+   * @property list product items non empty list
+   */
   data class Listing(val list: List<ProductItem>) : CatalogListState()
 }
 
@@ -67,8 +86,6 @@ class CatalogListViewModel(
 
   private fun fetchList() {
     viewModelScope.launch {
-      /*_uiState.value = CatalogListState.Empty*/
-
       val products = repository.getAllProducts()
       products.collect {
         _uiState.value = when {
