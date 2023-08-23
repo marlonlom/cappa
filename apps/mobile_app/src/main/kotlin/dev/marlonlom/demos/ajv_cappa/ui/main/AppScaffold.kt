@@ -41,10 +41,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -67,6 +69,19 @@ fun MainScaffold(
 
   val onNavigationIconClicked: () -> Unit = {
     navController.popBackStack()
+  }
+
+  retrieveDefaultSelectedCatalogDetail(
+    currentRoute = currentRoute,
+    windowSizeClass = windowSizeClass,
+    catalogListState = catalogListState.value,
+    coroutineScope = coroutineScope,
+    detailViewModel = catalogDetailViewModel
+  )
+
+  if (MainScaffoldUtil.isTabletLandscape(windowSizeClass) && Destination.Detail.route == currentRoute) {
+    navController.popBackStack(currentRoute, true)
+    navController.navigate(Destination.CatalogList.route)
   }
 
   Scaffold(
@@ -127,6 +142,29 @@ fun MainScaffold(
   )
 }
 
+fun retrieveDefaultSelectedCatalogDetail(
+  currentRoute: String,
+  windowSizeClass: WindowSizeClass,
+  catalogListState: CatalogListState,
+  coroutineScope: CoroutineScope,
+  detailViewModel: CatalogDetailViewModel
+) {
+  if (!MainScaffoldUtil.isTabletLandscape(windowSizeClass)) {
+    return
+  }
+
+  if (currentRoute != Destination.CatalogList.route) {
+    return
+  }
+
+  if (catalogListState !is CatalogListState.Listing) {
+    return
+  }
+
+  coroutineScope.launch {
+    detailViewModel.find(catalogListState.list.first().id)
+  }
+}
 
 object MainScaffoldUtil {
 
