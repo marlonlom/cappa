@@ -30,13 +30,60 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LocalDataSource {
 
+  /**
+   * Returns all items catalog list.
+   *
+   * @return Catalog list
+   */
   fun getAllProducts(): Flow<List<ProductItem>>
+
+  /**
+   * Return a single product with provided id as Flow.
+   *
+   * @param productId Product id.
+   * @return Single product, or null.
+   */
   fun getProduct(productId: Long): Flow<ProductItem>
+
+  /**
+   * Return punctuations list for a single product using its id.
+   *
+   * @param productId Product id.
+   * @return Punctuations list, or empty list.
+   */
   fun getPunctuations(productId: Long): Flow<List<ProductItemPoint>>
+
+  /**
+   * Insert all product items.
+   *
+   * @param products product items as typed array.
+   */
   fun insertAllProducts(vararg products: ProductItem)
+
+  /**
+   * Insert all punctuations.
+   *
+   * @param punctuations punctuation items as typed array.
+   */
   fun insertAllPunctuations(vararg punctuations: ProductItemPoint)
+
+  /**
+   * Delete all products.
+   */
   fun deleteAllProducts()
+
+  /**
+   * Delete all punctuations.
+   */
   fun deleteAllPunctuations()
+
+  /**
+   * Search product items using provided text.
+   *
+   * @param search Input text for search.
+   * @return
+   */
+  fun searchProducts(search: String?): Flow<List<ProductItem>>
 }
 
 /**
@@ -64,5 +111,6 @@ class LocalDataSourceImpl(
   override fun deleteAllProducts() = appDatabase.catalogDao().deleteAllProducts()
 
   override fun deleteAllPunctuations() = appDatabase.catalogDao().deleteAllPunctuations()
+  override fun searchProducts(search: String?) = appDatabase.catalogDao().searchProducts(search)
 
 }
