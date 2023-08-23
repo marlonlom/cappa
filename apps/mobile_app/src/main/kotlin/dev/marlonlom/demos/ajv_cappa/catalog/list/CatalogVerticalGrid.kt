@@ -46,7 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.marlonlom.demos.ajv_cappa.R
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
-import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
+import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
 
 @Composable
 fun CatalogVerticalGrid(
@@ -56,7 +56,7 @@ fun CatalogVerticalGrid(
   listUiState: CatalogListState
 ) {
   val gridColumnsCount = when {
-    MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> 4
+    AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 4
     windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> 3
     else -> 2
   }

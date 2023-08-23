@@ -35,8 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import dev.marlonlom.demos.ajv_cappa.R
-import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
-
+import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
 
 @Composable
 fun CatalogTitleText(windowSizeClass: WindowSizeClass) {
@@ -50,7 +49,7 @@ fun CatalogTitleText(windowSizeClass: WindowSizeClass) {
         val textTitleEnjoy = stringResource(R.string.home_title_enjoy)
         append(
           when {
-            MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> "$textTitleEnjoy "
+            AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> "$textTitleEnjoy "
             else -> "$textTitleEnjoy \n"
           }
         )

@@ -29,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetail
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.DetailScreen
-import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
+import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
 import timber.log.Timber
 
 @Composable
@@ -41,7 +41,7 @@ fun CatalogListRoute(
   findSingleItem: (Long) -> Unit,
   detailUiState: CatalogDetail?,
 ) {
-  if (MainScaffoldUtil.isTabletLandscape(windowSizeClass)) {
+  if (AppScaffoldUtil.isTabletLandscape(windowSizeClass)) {
     CatalogListDetailScreen(
       modifier = modifier,
       windowSizeClass = windowSizeClass,
