@@ -24,7 +24,6 @@ package dev.marlonlom.demos.ajv_cappa.catalog.detail
 import dev.marlonlom.demos.ajv_cappa.local.data.FakeLocalDataSource
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.util.MainDispatcherRule
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -53,25 +52,25 @@ internal class CatalogDetailViewModelTest {
   @Test
   fun shouldFindCatalogDetailsById() = runTest {
     val expectedItemId = 15396L
-    viewModel.find(expectedItemId).collectLatest { catalogDetail ->
-      when {
-        catalogDetail != null -> {
-          Assert.assertNotNull(catalogDetail.product)
-          Assert.assertEquals(expectedItemId, catalogDetail.product.id)
-          Assert.assertTrue(catalogDetail.points.isNotEmpty())
-        }
-
-        else ->
-          Assert.fail("Not found")
+    viewModel.find(expectedItemId)
+    val catalogDetail = viewModel.detail.value
+    when {
+      catalogDetail != null -> {
+        Assert.assertNotNull(catalogDetail.product)
+        Assert.assertEquals(expectedItemId, catalogDetail.product.id)
+        Assert.assertTrue(catalogDetail.points.isNotEmpty())
       }
+
+      else ->
+        Assert.fail("Not found")
     }
   }
 
   @Test
   fun shouldNotFindCatalogDetailsById() = runTest {
     val expectedItemId = 9999L
-    viewModel.find(expectedItemId).collectLatest { catalogDetail ->
-      Assert.assertNull(catalogDetail)
-    }
+    viewModel.find(expectedItemId)
+    val catalogDetail = viewModel.detail.value
+    Assert.assertNull(catalogDetail)
   }
 }
