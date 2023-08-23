@@ -60,7 +60,7 @@ import dev.marlonlom.demos.ajv_cappa.R
 import dev.marlonlom.demos.ajv_cappa.catalog.list.toSentenceCase
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
-import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffoldUtil
+import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
 import dev.marlonlom.demos.ajv_cappa.ui.main.isCompactWidth
 
 @Composable
@@ -95,26 +95,26 @@ fun DetailScreen(
 
   val paddingValues = when {
     windowSizeClass.isCompactWidth -> PaddingValues(horizontal = 20.dp, vertical = 0.dp)
-    MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> PaddingValues(horizontal = 60.dp, vertical = 20.dp)
-    MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> PaddingValues(all = 60.dp)
+    AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> PaddingValues(horizontal = 60.dp, vertical = 20.dp)
+    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> PaddingValues(all = 60.dp)
     else -> PaddingValues(horizontal = 60.dp)
   }
 
   val columnsCount = when {
     windowSizeClass.isCompactWidth -> 2
-    MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> 4
+    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 4
     else -> 3
   }
 
   val productImageSize = when {
-    MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> 120.dp
-    MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> 100.dp
+    AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 120.dp
+    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 100.dp
     else -> 200.dp
   }
 
   val isHeadingLandscape = when {
-    MainScaffoldUtil.isMobileLandscape(windowSizeClass) -> true
-    MainScaffoldUtil.isTabletLandscape(windowSizeClass) -> true
+    AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> true
+    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> true
     else -> false
   }
 
