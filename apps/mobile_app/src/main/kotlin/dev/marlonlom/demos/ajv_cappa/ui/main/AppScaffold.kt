@@ -28,9 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
@@ -50,13 +49,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-
+/**
+ * Application main scaffold screen composable function.
+ *
+ * @author marlonlom
+ *
+ * @param windowSizeClass Window size class.
+ * @param modifier Modifier for the layout.
+ * @param catalogListViewModel Reference for catalog list view model.
+ * @param catalogDetailViewModel Reference for catalog detail view model.
+ * @param catalogSearchViewModel Reference for catalog search view model.
+ */
 @Composable
 fun MainScaffold(
   windowSizeClass: WindowSizeClass,
   modifier: Modifier = Modifier,
   catalogListViewModel: CatalogListViewModel,
-  catalogDetailViewModel: CatalogDetailViewModel
+  catalogDetailViewModel: CatalogDetailViewModel,
+  catalogSearchViewModel: CatalogSearchViewModel
 ) {
   val coroutineScope = rememberCoroutineScope()
   val navController: NavHostController = rememberNavController()
@@ -66,6 +76,7 @@ fun MainScaffold(
   val navigationActions = AppNavigationActions(navController)
   val isDetailDestination = !Destination.listOf().map { it.route }.contains(currentRoute)
   val catalogListState = catalogListViewModel.uiState.collectAsStateWithLifecycle()
+  val catalogSearchState = catalogSearchViewModel.uiState.collectAsStateWithLifecycle()
 
   val onNavigationIconClicked: () -> Unit = {
     navController.popBackStack()
@@ -79,7 +90,7 @@ fun MainScaffold(
     detailViewModel = catalogDetailViewModel
   )
 
-  if (MainScaffoldUtil.isTabletLandscape(windowSizeClass) && Destination.Detail.route == currentRoute) {
+  if (AppScaffoldUtil.isTabletLandscape(windowSizeClass) && Destination.Detail.route == currentRoute) {
     navController.popBackStack(currentRoute, true)
     navController.navigate(Destination.CatalogList.route)
   }
@@ -89,7 +100,7 @@ fun MainScaffold(
       .fillMaxWidth()
       .background(MaterialTheme.colorScheme.surface),
     topBar = {
-      if (MainScaffoldUtil.canShowTopBar(windowSizeClass, isDetailDestination)) {
+      if (AppScaffoldUtil.canShowTopBar(windowSizeClass, isDetailDestination)) {
         AppTopBar(
           onNavigationIconClicked = onNavigationIconClicked
         )
@@ -97,7 +108,7 @@ fun MainScaffold(
     },
     content = { paddingValues ->
       Row {
-        if (MainScaffoldUtil.canShowNavigationRail(windowSizeClass, isDetailDestination)) {
+        if (AppScaffoldUtil.canShowNavigationRail(windowSizeClass, isDetailDestination)) {
           AppNavRail(
             currentRoute = currentRoute,
             navigationActions = navigationActions
@@ -105,16 +116,16 @@ fun MainScaffold(
         }
 
         val hostModifier =
-          if (MainScaffoldUtil.isTabletLandscape(windowSizeClass))
+          if (AppScaffoldUtil.isTabletLandscape(windowSizeClass))
             Modifier.width(334.dp)
           else Modifier.fillMaxWidth()
 
         NavigationHost(
-          modifier = hostModifier.padding(paddingValues),
           navController = navController,
           windowSizeClass = windowSizeClass,
           listUiState = catalogListState.value,
           detailUiState = catalogDetailViewModel.detail.value,
+          searchState = catalogSearchState.value,
           onBackPressed = onNavigationIconClicked,
           gotoDetailRoute = { catalogItemId ->
             val detailRoutePath = Destination.Detail.createRoute(catalogItemId)
@@ -126,12 +137,17 @@ fun MainScaffold(
             coroutineScope.launch {
               catalogDetailViewModel.find(catalogItemId)
             }
-          }
+          }, onInputSearchTextChange = { searchText ->
+            coroutineScope.launch {
+              catalogSearchViewModel.doSearch(searchText)
+            }
+          },
+          modifier = hostModifier.padding(paddingValues)
         )
       }
     },
     bottomBar = {
-      if (MainScaffoldUtil.canShowBottomBar(windowSizeClass, isDetailDestination)) {
+      if (AppScaffoldUtil.canShowBottomBar(windowSizeClass, isDetailDestination)) {
         MainBottomBar(
           currentRoute = currentRoute,
           navigationActions = navigationActions,
@@ -142,14 +158,14 @@ fun MainScaffold(
   )
 }
 
-fun retrieveDefaultSelectedCatalogDetail(
+private fun retrieveDefaultSelectedCatalogDetail(
   currentRoute: String,
   windowSizeClass: WindowSizeClass,
   catalogListState: CatalogListState,
   coroutineScope: CoroutineScope,
   detailViewModel: CatalogDetailViewModel
 ) {
-  if (!MainScaffoldUtil.isTabletLandscape(windowSizeClass)) {
+  if (!AppScaffoldUtil.isTabletLandscape(windowSizeClass)) {
     return
   }
 
@@ -165,33 +181,3 @@ fun retrieveDefaultSelectedCatalogDetail(
     detailViewModel.find(catalogListState.list.first().id)
   }
 }
-
-object MainScaffoldUtil {
-
-  fun canShowTopBar(
-    wsc: WindowSizeClass, isDetailDestination: Boolean
-  ) = isDetailDestination and !isTabletLandscape(wsc)
-
-  fun canShowNavigationRail(
-    wsc: WindowSizeClass, isDetailDestination: Boolean
-  ) = isMobileLandscape(wsc) and !isDetailDestination or isTabletLandscape(wsc)
-
-  fun canShowBottomBar(windowSizeClass: WindowSizeClass, isDetailDestination: Boolean) =
-    !isDetailDestination && !windowSizeClass.isExpandedWidth
-
-  fun isTabletLandscape(wsc: WindowSizeClass) = !wsc.isCompactWidth and wsc.isMediumHeight
-
-  fun isMobileLandscape(wsc: WindowSizeClass) = wsc.isExpandedWidth and wsc.isCompactHeight
-}
-
-val WindowSizeClass.isCompactHeight: Boolean
-  get() = this.heightSizeClass == WindowHeightSizeClass.Compact
-
-val WindowSizeClass.isMediumHeight: Boolean
-  get() = this.heightSizeClass == WindowHeightSizeClass.Medium
-
-val WindowSizeClass.isExpandedWidth: Boolean
-  get() = this.widthSizeClass == WindowWidthSizeClass.Expanded
-
-val WindowSizeClass.isCompactWidth: Boolean
-  get() = this.widthSizeClass == WindowWidthSizeClass.Compact
