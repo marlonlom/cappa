@@ -31,6 +31,8 @@ import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetail
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
+import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchRoute
+import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState
 import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
 import timber.log.Timber
 
@@ -40,9 +42,11 @@ fun NavigationHost(
   windowSizeClass: WindowSizeClass,
   listUiState: CatalogListState,
   detailUiState: CatalogDetail?,
+  searchState: CatalogSearchState,
   onBackPressed: () -> Unit,
   gotoDetailRoute: (Long) -> Unit,
   findSingleItem: (Long) -> Unit,
+  onInputSearchTextChange: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
 
@@ -50,9 +54,7 @@ fun NavigationHost(
     navController = navController,
     startDestination = Destination.CatalogList.route,
   ) {
-    composable(
-      route = Destination.CatalogList.route
-    ) {
+    composable(route = Destination.CatalogList.route) {
       CatalogListRoute(
         windowSizeClass = windowSizeClass,
         modifier = modifier,
@@ -63,7 +65,19 @@ fun NavigationHost(
       )
     }
 
-    composable(Destination.Settings.route) {
+    composable(Destination.CatalogSearch.route) {
+      CatalogSearchRoute(
+        modifier = modifier,
+        windowSizeClass = windowSizeClass,
+        searchUiState = searchState,
+        detailUiState = detailUiState,
+        gotoDetailRoute = gotoDetailRoute,
+        findSingleItem = findSingleItem,
+        onInputSearchTextChange = onInputSearchTextChange
+      )
+    }
+
+    composable(route = Destination.Settings.route) {
       SettingsRoute(
         windowSizeClass = windowSizeClass,
         modifier = modifier
