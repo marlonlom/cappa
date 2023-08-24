@@ -21,9 +21,6 @@
 
 package  dev.marlonlom.demos.ajv_cappa.local.data
 
-import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
-import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
-import dev.marlonlom.demos.ajv_cappa.local.data.ProductItemPoint
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.successOr
@@ -36,7 +33,11 @@ internal class FakeLocalDataSource(
 
   override fun getAllProducts(): Flow<List<ProductItem>> {
     val listResponse = remoteDataService.fetchData().successOr(emptyList())
-    return flowOf(listResponse.map { ProductItem(id = it.id, title = it.title, picture = it.picture) })
+    return flowOf(listResponse.map { ProductItem(
+        id = it.id,
+        title = it.title,,,
+        picture = it.picture
+    ) })
   }
 
   override fun getProduct(productId: Long): Flow<ProductItem> {
@@ -44,7 +45,7 @@ internal class FakeLocalDataSource(
       .successOr(emptyList())
       .find { it.id == productId }
       .let {
-        if (it != null) ProductItem(it.id, it.title, it.picture) else NONE
+        if (it != null) ProductItem(it.id, it.title,,, it.picture) else NONE
       }
     return flowOf(listResponse)
   }
@@ -82,6 +83,6 @@ internal class FakeLocalDataSource(
   }
 
   companion object {
-    val NONE = ProductItem(-1, "", "")
+    val NONE = ProductItem(-1, "",,, "")
   }
 }

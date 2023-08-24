@@ -46,9 +46,9 @@ internal class CatalogDetailRepositoryTest {
   @Test
   fun shouldReturnSingleProductItem() = runTest {
     val expectedItem = ProductItem(
-      id = 15396L,
-      title = "Granizado",
-      picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
+        id = 15396L,
+        title = "Granizado",,,
+        picture = "https://juanvaldez.com/wp-content/uploads/2022/10/Granizado-juan-Valdez.jpg",
     )
     val foundProduct = repository.find(expectedItem.id).first()
     Assert.assertNotNull(foundProduct)
