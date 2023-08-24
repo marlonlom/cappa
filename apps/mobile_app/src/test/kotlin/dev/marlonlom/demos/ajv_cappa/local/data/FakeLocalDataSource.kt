@@ -21,6 +21,7 @@
 
 package  dev.marlonlom.demos.ajv_cappa.local.data
 
+import dev.marlonlom.demos.ajv_cappa.catalog.list.slug
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogDataService
 import dev.marlonlom.demos.ajv_cappa.remote.data.CatalogItem
 import dev.marlonlom.demos.ajv_cappa.remote.data.successOr
@@ -33,11 +34,15 @@ internal class FakeLocalDataSource(
 
   override fun getAllProducts(): Flow<List<ProductItem>> {
     val listResponse = remoteDataService.fetchData().successOr(emptyList())
-    return flowOf(listResponse.map { ProductItem(
+    return flowOf(listResponse.map {
+      ProductItem(
         id = it.id,
-        title = it.title,,,
+        title = it.title,
+        slug = it.title.slug,
+        titleNormalized = it.title.lowercase(),
         picture = it.picture
-    ) })
+      )
+    })
   }
 
   override fun getProduct(productId: Long): Flow<ProductItem> {
@@ -45,7 +50,13 @@ internal class FakeLocalDataSource(
       .successOr(emptyList())
       .find { it.id == productId }
       .let {
-        if (it != null) ProductItem(it.id, it.title,,, it.picture) else NONE
+        if (it != null) ProductItem(
+          id = it.id,
+          title = it.title,
+          slug = it.title.slug,
+          titleNormalized = it.title.lowercase(),
+          picture = it.picture
+        ) else NONE
       }
     return flowOf(listResponse)
   }
@@ -82,7 +93,27 @@ internal class FakeLocalDataSource(
     TODO("Not yet implemented")
   }
 
+  override fun searchProducts(search: String?): Flow<List<ProductItem>> {
+    if (search.isNullOrEmpty()) return flowOf(emptyList())
+
+    val listResponse = remoteDataService.fetchData()
+      .successOr(emptyList())
+      .filter { it.title.lowercase().indexOf(search.lowercase()) >= 0 }
+      .map {
+        ProductItem(
+          id = it.id,
+          title = it.title,
+          slug = it.title.slug,
+          titleNormalized = it.title.lowercase(),
+          picture = it.picture
+        )
+      }
+
+    return flowOf(listResponse)
+
+  }
+
   companion object {
-    val NONE = ProductItem(-1, "",,, "")
+    val NONE = ProductItem(-1, "", "", "", "")
   }
 }
