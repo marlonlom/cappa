@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
@@ -86,6 +87,7 @@ fun MainScaffold(
     currentRoute = currentRoute,
     windowSizeClass = windowSizeClass,
     catalogListState = catalogListState.value,
+    catalogSearchState = catalogSearchState.value,
     coroutineScope = coroutineScope,
     detailViewModel = catalogDetailViewModel
   )
@@ -93,6 +95,13 @@ fun MainScaffold(
   if (AppScaffoldUtil.isTabletLandscape(windowSizeClass) && Destination.Detail.route == currentRoute) {
     navController.popBackStack(currentRoute, true)
     navController.navigate(Destination.CatalogList.route)
+  }
+
+  val clearSearchAction: () -> Unit = {
+    coroutineScope.launch {
+      catalogDetailViewModel.find(-1L)
+      catalogSearchViewModel.performClearing()
+    }
   }
 
   Scaffold(
@@ -112,7 +121,9 @@ fun MainScaffold(
           AppNavRail(
             currentRoute = currentRoute,
             navigationActions = navigationActions
-          )
+          ) {
+            clearSearchAction()
+          }
         }
 
         val hostModifier =
@@ -144,9 +155,7 @@ fun MainScaffold(
             }
           },
           onSearchCleared = {
-            coroutineScope.launch {
-              catalogSearchViewModel.performClearing()
-            }
+            clearSearchAction()
           },
           modifier = hostModifier.padding(paddingValues)
         )
@@ -157,6 +166,9 @@ fun MainScaffold(
         MainBottomBar(
           currentRoute = currentRoute,
           navigationActions = navigationActions,
+          onSearchCleared = {
+            clearSearchAction()
+          },
           modifier = modifier
         )
       }
@@ -169,7 +181,8 @@ private fun retrieveDefaultSelectedCatalogDetail(
   windowSizeClass: WindowSizeClass,
   catalogListState: CatalogListState,
   coroutineScope: CoroutineScope,
-  detailViewModel: CatalogDetailViewModel
+  detailViewModel: CatalogDetailViewModel,
+  catalogSearchState: CatalogSearchState
 ) {
   if (!AppScaffoldUtil.isTabletLandscape(windowSizeClass)) {
     return
@@ -179,11 +192,26 @@ private fun retrieveDefaultSelectedCatalogDetail(
     return
   }
 
-  if (catalogListState !is CatalogListState.Listing) {
-    return
-  }
+  when (currentRoute) {
+    Destination.CatalogList.route -> {
+      val isCatalogListStateOtherThatListing = catalogListState !is CatalogListState.Listing
+      if (isCatalogListStateOtherThatListing) {
+        return
+      }
+      coroutineScope.launch {
+        detailViewModel.find(
+          (catalogListState as CatalogListState.Listing).list.first().id
+        )
+      }
+    }
 
-  coroutineScope.launch {
-    detailViewModel.find(catalogListState.list.first().id)
+    Destination.CatalogSearch.route -> {
+      if (catalogSearchState !is CatalogSearchState.WithResults) {
+        return
+      }
+      coroutineScope.launch {
+        detailViewModel.find(catalogSearchState.list.first().id)
+      }
+    }
   }
 }
