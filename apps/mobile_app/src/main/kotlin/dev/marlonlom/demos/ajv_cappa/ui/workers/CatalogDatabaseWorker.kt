@@ -26,6 +26,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import dev.marlonlom.demos.ajv_cappa.catalog.list.slug
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
@@ -49,19 +50,27 @@ class CatalogDatabaseWorker(
     if (catalogRemoteData.isEmpty()) Result.failure()
 
     val dbProductItems: List<ProductItem> = catalogRemoteData.map {
-      ProductItem(id = it.id, title = it.title, picture = it.picture)
-    }
+      ProductItem(
+        id = it.id,
+        title = it.title,
+        slug = it.title.slug,
+        titleLowercase = it.title.slug.replace("-", " "),
+        picture = it.picture
+      )
+    }.distinctBy { it.slug }
 
-    val dbProductItemPoints: List<ProductItemPoint> = catalogRemoteData.map { item ->
-      item.punctuations.mapIndexed { index, punctuation ->
-        ProductItemPoint(
-          id = index.plus(1).toLong(),
-          productId = item.id,
-          label = punctuation.label,
-          points = punctuation.pointsQty.toLong()
-        )
-      }
-    }.flatten()
+    val dbProductItemPoints: List<ProductItemPoint> = catalogRemoteData
+      .distinctBy { it.title.slug }
+      .map { item ->
+        item.punctuations.mapIndexed { index, punctuation ->
+          ProductItemPoint(
+            id = index.plus(1).toLong(),
+            productId = item.id,
+            label = punctuation.label,
+            points = punctuation.pointsQty.toLong()
+          )
+        }
+      }.flatten()
 
     val appDatabase = AppDatabase.getInstance(applicationContext)
     val localDataSource: LocalDataSource = LocalDataSourceImpl(appDatabase)
