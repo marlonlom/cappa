@@ -57,10 +57,14 @@ class CatalogDetailRepository(
         localDataSource.getProduct(itemId),
         localDataSource.getPunctuations(itemId)
       ) { product, points ->
-        if (product.id == -1L) {
-          null
-        } else {
-          CatalogDetail(product, points)
+        try {
+          return@combine if (product.id == -1L) {
+            null
+          } else {
+            CatalogDetail(product, points)
+          }
+        } catch (e: Exception) {
+          return@combine null
         }
       }
     }
