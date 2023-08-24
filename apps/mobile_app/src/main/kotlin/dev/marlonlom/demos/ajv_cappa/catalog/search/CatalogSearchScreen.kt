@@ -36,17 +36,22 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -74,6 +79,7 @@ fun CatalogSearchScreen(
   searchUiState: CatalogSearchState,
   onInputSearchTextChange: (String) -> Unit,
   onSelectedItem: (Long) -> Unit,
+  onSearchCleared: () -> Unit,
   windowSizeClass: WindowSizeClass
 ) {
 
@@ -100,7 +106,8 @@ fun CatalogSearchScreen(
     CatalogSearchTitleText(windowSizeClass = windowSizeClass)
     CatalogSearchInput(
       searchUiState = searchUiState,
-      onInputSearchTextChange = onInputSearchTextChange
+      onInputSearchTextChange = onInputSearchTextChange,
+      onSearchCleared = onSearchCleared
     )
 
     when (searchUiState) {
@@ -144,7 +151,8 @@ fun CatalogSearchScreen(
 @Composable
 fun CatalogSearchInput(
   searchUiState: CatalogSearchState,
-  onInputSearchTextChange: (String) -> Unit
+  onInputSearchTextChange: (String) -> Unit,
+  onSearchCleared: () -> Unit
 ) {
   val focusManager = LocalFocusManager.current
 
@@ -156,6 +164,9 @@ fun CatalogSearchInput(
       )
     )
   }
+
+  var showClearIcon by rememberSaveable { mutableStateOf(false) }
+  showClearIcon = searchUiState.searchInput.isNotEmpty()
 
   TextField(
     modifier = Modifier
@@ -179,6 +190,21 @@ fun CatalogSearchInput(
     shape = RectangleShape,
     leadingIcon = {
       Icon(Icons.Rounded.Search, contentDescription = null)
+    },
+    trailingIcon = {
+      if (showClearIcon) {
+        IconButton(onClick = {
+          textState.value = TextFieldValue("")
+          focusManager.clearFocus()
+          onSearchCleared()
+        }) {
+          Icon(
+            imageVector = Icons.Rounded.Clear,
+            tint = MaterialTheme.colorScheme.onSurface,
+            contentDescription = "Clear icon"
+          )
+        }
+      }
     },
     singleLine = true
   )

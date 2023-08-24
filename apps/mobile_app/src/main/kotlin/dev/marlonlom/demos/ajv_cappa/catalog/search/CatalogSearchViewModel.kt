@@ -24,12 +24,15 @@ package dev.marlonlom.demos.ajv_cappa.catalog.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState.EmptyResults
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState.Ready
+import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState.WithResults
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -62,13 +65,21 @@ class CatalogSearchViewModel(
   suspend fun doSearch(searchText: String) {
     if (searchText.isEmpty()) return
     _uiState.value = CatalogSearchState.Searching(searchText)
-    viewModelScope.launch() {
+    viewModelScope.launch {
       delay(1_000)
       repository.searchProducts("%%$searchText%").collect { itemList ->
         _uiState.value = when {
-          itemList.isNotEmpty() -> CatalogSearchState.WithResults(searchText, itemList)
-          else -> CatalogSearchState.EmptyResults(searchText)
+          itemList.isNotEmpty() -> WithResults(searchText, itemList)
+          else -> EmptyResults(searchText)
         }
+      }
+    }
+  }
+
+  fun performClearing() {
+    viewModelScope.launch {
+      _uiState.update {
+        Ready()
       }
     }
   }
