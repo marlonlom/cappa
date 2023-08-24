@@ -54,7 +54,7 @@ class CatalogDatabaseWorker(
         id = it.id,
         title = it.title,
         slug = it.title.slug,
-        titleLowercase = it.title.slug.replace("-", " "),
+        titleNormalized = it.title.slug.replace("-", " "),
         picture = it.picture
       )
     }.distinctBy { it.slug }
