@@ -40,6 +40,8 @@ import kotlinx.coroutines.flow.Flow
 data class ProductItem(
   @ColumnInfo(name = "product_id") @PrimaryKey() val id: Long,
   @ColumnInfo(name = "product_title") val title: String,
+  @ColumnInfo(name = "product_slug") val slug: String,
+  @ColumnInfo(name = "product_title_lower") val titleLowercase: String,
   @ColumnInfo(name = "product_picture") val picture: String
 )
 
