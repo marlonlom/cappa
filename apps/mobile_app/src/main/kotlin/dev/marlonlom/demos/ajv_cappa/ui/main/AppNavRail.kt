@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
+import kotlinx.coroutines.Job
 import timber.log.Timber
 
 
@@ -40,7 +41,8 @@ fun AppNavRail(
   currentRoute: String,
   navigationActions: AppNavigationActions,
   modifier: Modifier = Modifier,
-  destinations: List<Destination> = Destination.listOf()
+  destinations: List<Destination> = Destination.listOf(),
+  onSearchCleared: () -> Unit
 ) {
   NavigationRail(
     modifier = modifier
@@ -52,7 +54,11 @@ fun AppNavRail(
         onClick = {
           when (it) {
             is Destination.CatalogList -> navigationActions.navigateToHome()
-            is Destination.CatalogSearch -> navigationActions.navigateToSearch()
+            is Destination.CatalogSearch -> {
+              onSearchCleared()
+              navigationActions.navigateToSearch()
+            }
+
             is Destination.Settings -> navigationActions.navigateToSettings()
             else -> {
               Timber.d("[AppNavRail] Nothing happen here.")

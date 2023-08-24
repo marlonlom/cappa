@@ -30,10 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
+import kotlinx.coroutines.Job
 import timber.log.Timber
 
 @Composable
@@ -41,7 +40,8 @@ fun MainBottomBar(
   currentRoute: String,
   navigationActions: AppNavigationActions,
   modifier: Modifier = Modifier,
-  destinations: List<Destination> = Destination.listOf()
+  destinations: List<Destination> = Destination.listOf(),
+  onSearchCleared: () -> Unit
 ) {
   NavigationBar(
     modifier = modifier
@@ -55,7 +55,11 @@ fun MainBottomBar(
         onClick = {
           when (it) {
             is Destination.CatalogList -> navigationActions.navigateToHome()
-            is Destination.CatalogSearch -> navigationActions.navigateToSearch()
+            is Destination.CatalogSearch -> {
+              onSearchCleared()
+              navigationActions.navigateToSearch()
+            }
+
             is Destination.Settings -> navigationActions.navigateToSettings()
             else -> {
               Timber.d("[MainBottomBar] Nothing happen here.")
@@ -79,13 +83,4 @@ fun MainBottomBar(
       )
     }
   }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainBottomBarPreview() {
-  MainBottomBar(
-    currentRoute = Destination.CatalogList.route,
-    navigationActions = AppNavigationActions(rememberNavController())
-  )
 }
