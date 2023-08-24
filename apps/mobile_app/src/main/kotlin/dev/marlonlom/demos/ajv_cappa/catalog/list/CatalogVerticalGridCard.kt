@@ -35,11 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
 import timber.log.Timber
+import java.text.Normalizer
 import java.util.Locale
 
 @Composable
@@ -79,6 +81,7 @@ fun CatalogVerticalGridCard(
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.labelLarge,
       maxLines = 2,
+      overflow = TextOverflow.Ellipsis,
       minLines = 2
     )
   }
@@ -86,3 +89,13 @@ fun CatalogVerticalGridCard(
 
 inline val String.toSentenceCase: String
   get() = this.lowercase(Locale.getDefault()).replaceFirstChar { it.uppercaseChar() }
+
+inline val String.slug: String
+  get() = Normalizer.normalize(this, Normalizer.Form.NFD)
+    .replace("\\p{Mn}+".toRegex(), "")
+    .lowercase(Locale.getDefault())
+    .replace("\n", " ")
+    .replace("[^a-z\\d\\s]".toRegex(), " ")
+    .split(" ")
+    .joinToString("-")
+    .replace("-+".toRegex(), "-")
