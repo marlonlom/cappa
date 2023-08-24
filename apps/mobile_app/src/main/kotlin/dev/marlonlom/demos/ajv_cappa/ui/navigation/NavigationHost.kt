@@ -47,6 +47,7 @@ fun NavigationHost(
   gotoDetailRoute: (Long) -> Unit,
   findSingleItem: (Long) -> Unit,
   onInputSearchTextChange: (String) -> Unit,
+  onSearchCleared: () -> Unit,
   modifier: Modifier = Modifier
 ) {
 
@@ -73,7 +74,8 @@ fun NavigationHost(
         detailUiState = detailUiState,
         gotoDetailRoute = gotoDetailRoute,
         findSingleItem = findSingleItem,
-        onInputSearchTextChange = onInputSearchTextChange
+        onInputSearchTextChange = onInputSearchTextChange,
+        onSearchCleared = onSearchCleared
       )
     }
 

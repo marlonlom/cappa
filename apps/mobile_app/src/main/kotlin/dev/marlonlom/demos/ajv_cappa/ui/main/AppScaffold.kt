@@ -137,9 +137,15 @@ fun MainScaffold(
             coroutineScope.launch {
               catalogDetailViewModel.find(catalogItemId)
             }
-          }, onInputSearchTextChange = { searchText ->
+          },
+          onInputSearchTextChange = { searchText ->
             coroutineScope.launch {
               catalogSearchViewModel.doSearch(searchText)
+            }
+          },
+          onSearchCleared = {
+            coroutineScope.launch {
+              catalogSearchViewModel.performClearing()
             }
           },
           modifier = hostModifier.padding(paddingValues)
