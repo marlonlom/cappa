@@ -40,7 +40,8 @@ fun CatalogSearchRoute(
   detailUiState: CatalogDetail?,
   gotoDetailRoute: (Long) -> Unit,
   findSingleItem: (Long) -> Unit,
-  onInputSearchTextChange: (String) -> Unit
+  onInputSearchTextChange: (String) -> Unit,
+  onSearchCleared: () -> Unit
 ) {
   Timber.d("[CatalogSearchRoute] searchUiState=$searchUiState")
   if (AppScaffoldUtil.isTabletLandscape(windowSizeClass)) {
@@ -54,12 +55,11 @@ fun CatalogSearchRoute(
       },
       onInputSearchTextChange = {
         onInputSearchTextChange(it)
-      }
+      }, onSearchCleared = onSearchCleared
     )
   } else {
     CatalogSearchScreen(
       modifier = modifier,
-      windowSizeClass = windowSizeClass,
       searchUiState = searchUiState,
       onInputSearchTextChange = { searchInput ->
         Timber.d("[CatalogSearchRoute.CatalogSearchScreen.onInputSearchTextChange] searchInput=$searchInput")
@@ -68,7 +68,8 @@ fun CatalogSearchRoute(
       onSelectedItem = { productId ->
         Timber.d("[CatalogSearchRoute.CatalogSearchScreen.onSelectedItem] productId=$productId")
         gotoDetailRoute(productId)
-      }
+      }, onSearchCleared = onSearchCleared,
+      windowSizeClass = windowSizeClass
     )
   }
 }
@@ -81,18 +82,20 @@ fun CatalogSearchDetailScreen(
   searchUiState: CatalogSearchState,
   detailUiState: CatalogDetail?,
   onSelectedItem: (Long) -> Unit,
-  onInputSearchTextChange: (String) -> Unit
+  onInputSearchTextChange: (String) -> Unit,
+  onSearchCleared: () -> Unit
 ) {
   Row {
     CatalogSearchScreen(
       modifier = modifier,
-      windowSizeClass = windowSizeClass,
       searchUiState = searchUiState,
       onInputSearchTextChange = { searchInput ->
         onInputSearchTextChange(searchInput)
         Timber.d("[CatalogSearchRoute.CatalogSearchDetailScreen.onInputSearchTextChange] searchInput=$searchInput")
       },
-      onSelectedItem = onSelectedItem
+      onSelectedItem = onSelectedItem,
+      onSearchCleared = onSearchCleared,
+      windowSizeClass = windowSizeClass
     )
     if (detailUiState != null) {
       DetailScreen(
