@@ -47,10 +47,11 @@ fun SettingsTitleText(windowSizeClass: WindowSizeClass) {
         )
       ) {
         val textTitleEnjoy = stringResource(R.string.settings_title_application)
-        val isMobileLandscape = AppScaffoldUtil.isMobileLandscape(windowSizeClass)
+        val isLandscape = AppScaffoldUtil.isMobileLandscape(windowSizeClass)
+          .or(AppScaffoldUtil.isTabletLandscape(windowSizeClass))
         append(
           when {
-            isMobileLandscape -> "$textTitleEnjoy "
+            isLandscape -> "$textTitleEnjoy "
             else -> "$textTitleEnjoy \n"
           }
         )
