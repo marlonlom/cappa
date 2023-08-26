@@ -41,8 +41,8 @@ fun CatalogSettingsRoute(
     WindowWidthSizeClass.Compact -> 20.dp
     else -> 60.dp
   }
-  Timber.d("[CatalogSettingsRoute] settingsUiState=${routeParams.settingsUiState}")
-  when (routeParams.settingsUiState) {
+  Timber.d("[CatalogSettingsRoute] settingsUiState=${routeParams.uiState}")
+  when (routeParams.uiState) {
     null -> {
       Text(
         text = "No Settings :( ",
@@ -67,13 +67,13 @@ fun CatalogSettingsRoute(
  *
  * @author marlonlom
  *
- * @property settingsUiState Catalog setting value.
+ * @property uiState Catalog setting value.
  * @property updateBooleanSettingAction Action for updating boolean settings.
  * @property openExternalUrlAction Action for opening external urls.
  * @property openLicensesSectionAction Action for opening licenses content.
  */
 data class CatalogSettingsRouteParams(
-  val settingsUiState: CatalogSetting?,
+  val uiState: CatalogSetting?,
   val updateBooleanSettingAction: (String, Boolean) -> Unit,
   val openExternalUrlAction: (String) -> Unit,
   val openLicensesSectionAction: () -> Unit

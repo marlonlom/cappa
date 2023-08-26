@@ -24,6 +24,7 @@ package dev.marlonlom.demos.ajv_cappa
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +35,7 @@ import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchRepository
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRepository
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRouteParams
 import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsViewModel
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
@@ -91,13 +93,30 @@ class MainActivity : ComponentActivity() {
         )
       )
 
-      CappaTheme {
+      val settingsUiState = catalogSettingsViewModel.uiState.value
+
+      CappaTheme(
+        darkTheme = settingsUiState?.isAppInDarkTheme ?: isSystemInDarkTheme(),
+        dynamicColor = settingsUiState?.isUsingDynamicColors ?: true
+      ) {
         MainScaffold(
           windowSizeClass = windowSizeClass,
           catalogListViewModel = catalogListViewModel,
           catalogDetailViewModel = catalogDetailViewModel,
           catalogSearchViewModel = catalogSearchViewModel,
-          catalogSettingsViewModel = catalogSettingsViewModel
+          catalogSettingsRouteParams = CatalogSettingsRouteParams(
+            uiState = settingsUiState,
+            updateBooleanSettingAction = { key: String, toggled: Boolean ->
+              Timber.d("[MainScaffold.updateBooleanSettingAction] key=$key, toggled=$toggled")
+              catalogSettingsViewModel.updateBooleanSetting(key, toggled)
+            },
+            openExternalUrlAction = {
+              Timber.d("[MainScaffold.openExternalUrlAction] url=$it")
+            },
+            openLicensesSectionAction = {
+              Timber.d("[MainScaffold.openLicensesSectionAction]")
+            }
+          )
         )
       }
     }

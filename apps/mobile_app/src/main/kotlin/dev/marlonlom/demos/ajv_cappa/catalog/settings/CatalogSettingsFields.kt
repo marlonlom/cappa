@@ -39,7 +39,7 @@ fun DarkThemeSettingSwitch(
       Text(text = stringResource(R.string.settings_label_dark_theme))
     },
     state = rememberBooleanSettingState(
-      routeParams.settingsUiState!!.isAppInDarkTheme
+      routeParams.uiState!!.isAppInDarkTheme
     ),
     onCheckedChange = { toggled ->
       routeParams.updateBooleanSettingAction("dark_theme", toggled)
@@ -56,7 +56,7 @@ fun DynamicColorsSettingSwitch(
     title = {
       Text(text = stringResource(R.string.settings_label_dynamic_colors))
     },
-    state = rememberBooleanSettingState(routeParams.settingsUiState!!.isUsingDynamicColors),
+    state = rememberBooleanSettingState(routeParams.uiState!!.isUsingDynamicColors),
     onCheckedChange = { toggled ->
       routeParams.updateBooleanSettingAction("dynamic_colors", toggled)
     }
@@ -87,7 +87,7 @@ fun TermsConditionsSettingMenuLink(
     },
     onClick = {
       routeParams.openExternalUrlAction(
-        routeParams.settingsUiState!!.termsConditionsUrl
+        routeParams.uiState!!.termsConditionsUrl
       )
     }
   )
@@ -105,7 +105,7 @@ fun PersonalDataPolicySettingMenuLink(
     },
     onClick = {
       routeParams.openExternalUrlAction(
-        routeParams.settingsUiState!!.personalDataTreatmentPolicyUrl
+        routeParams.uiState!!.personalDataTreatmentPolicyUrl
       )
     }
   )
@@ -121,7 +121,7 @@ fun PrivacyPolicySettingMenuLink(
     },
     onClick = {
       routeParams.openExternalUrlAction(
-        routeParams.settingsUiState!!.privacyPolicyUrl
+        routeParams.uiState!!.privacyPolicyUrl
       )
     }
   )
@@ -137,7 +137,7 @@ fun AppVersionSettingsMenuLink(
       Text(text = stringResource(R.string.settings_label_app_version))
     },
     subtitle = {
-      Text(text = routeParams.settingsUiState!!.appVersion)
+      Text(text = routeParams.uiState!!.appVersion)
     },
     onClick = {}
   )
