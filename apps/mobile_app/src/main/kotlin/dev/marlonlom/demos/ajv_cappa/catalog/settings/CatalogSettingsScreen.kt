@@ -33,10 +33,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
+import timber.log.Timber
 
 @Composable
 fun CatalogSettingsScreen(
@@ -46,6 +48,7 @@ fun CatalogSettingsScreen(
   modifier: Modifier = Modifier
 ) {
   val gridColumnsCount = when {
+    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 6
     AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 4
     windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> 3
     else -> 2
@@ -53,19 +56,24 @@ fun CatalogSettingsScreen(
 
   val span: (LazyGridItemSpanScope.() -> GridItemSpan) =
     {
+      val currentLineSpan = when {
+        AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 2
+        AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 2
+        else -> maxCurrentLineSpan
+      }
       GridItemSpan(
-        when {
-          AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 2
-          AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 4
-          else -> maxCurrentLineSpan
-        }
+        currentLineSpan
       )
     }
 
   Column(
-    modifier = modifier
-      .fillMaxWidth()
-      .padding(horizontal = columnPaddingHorizontal)
+    modifier = (
+      if (AppScaffoldUtil.isTabletLandscape(windowSizeClass))
+        Modifier.fillMaxWidth()
+      else
+        modifier
+      ).padding(horizontal = columnPaddingHorizontal),
+    horizontalAlignment = Alignment.CenterHorizontally
   ) {
     SettingsTitleText(windowSizeClass = windowSizeClass)
     LazyVerticalGrid(
@@ -74,12 +82,13 @@ fun CatalogSettingsScreen(
       verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
       item(span = span) {
+        Timber.d("$this")
         DarkThemeSettingSwitch(routeParams)
       }
       item(span = span) {
         DynamicColorsSettingSwitch(routeParams)
       }
-      item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+      item(span = { GridItemSpan(maxLineSpan) }) {
         Divider(modifier = Modifier.padding(bottom = 10.dp))
       }
       item(span = span) {
@@ -94,7 +103,7 @@ fun CatalogSettingsScreen(
       item(span = span) {
         PersonalDataPolicySettingMenuLink(routeParams)
       }
-      item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+      item(span = { GridItemSpan(maxLineSpan) }) {
         Divider(modifier = Modifier.padding(bottom = 10.dp))
       }
       item(span = span) {
