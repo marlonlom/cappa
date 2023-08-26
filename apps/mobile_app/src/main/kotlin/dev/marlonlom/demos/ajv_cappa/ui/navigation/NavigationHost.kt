@@ -33,7 +33,8 @@ import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState
-import dev.marlonlom.demos.ajv_cappa.ui.settings.SettingsRoute
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSetting
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRoute
 import timber.log.Timber
 
 @Composable
@@ -43,11 +44,15 @@ fun NavigationHost(
   listUiState: CatalogListState,
   detailUiState: CatalogDetail?,
   searchState: CatalogSearchState,
+  settingsUiState: CatalogSetting?,
   onBackPressed: () -> Unit,
   gotoDetailRoute: (Long) -> Unit,
   findSingleItem: (Long) -> Unit,
   onInputSearchTextChange: (String) -> Unit,
   onSearchCleared: () -> Unit,
+  updateBooleanSettingAction: (String, Boolean) -> Unit,
+  openExternalUrlAction: (String) -> Unit,
+  openLicensesSectionAction: () -> Unit,
   modifier: Modifier = Modifier
 ) {
 
@@ -80,8 +85,12 @@ fun NavigationHost(
     }
 
     composable(route = Destination.Settings.route) {
-      SettingsRoute(
+      CatalogSettingsRoute(
         windowSizeClass = windowSizeClass,
+        settingsUiState = settingsUiState,
+        openExternalUrlAction = openExternalUrlAction,
+        updateBooleanSettingAction = updateBooleanSettingAction,
+        openLicensesSectionAction = openLicensesSectionAction,
         modifier = modifier
       )
     }
