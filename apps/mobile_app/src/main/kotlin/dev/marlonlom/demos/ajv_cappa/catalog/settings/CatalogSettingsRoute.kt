@@ -21,42 +21,28 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.settings
 
-import android.os.Build
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.alorma.compose.settings.storage.base.rememberBooleanSettingState
-import com.alorma.compose.settings.ui.SettingsSwitch
-import dev.marlonlom.demos.ajv_cappa.R
 import timber.log.Timber
 
 @Composable
 fun CatalogSettingsRoute(
   windowSizeClass: WindowSizeClass,
-  settingsUiState: CatalogSetting?,
-  updateBooleanSettingAction: (String, Boolean) -> Unit,
-  openExternalUrlAction: (String) -> Unit,
-  openLicensesSectionAction: () -> Unit,
+  routeParams: CatalogSettingsRouteParams,
   modifier: Modifier = Modifier
 ) {
   val columnPaddingHorizontal = when (windowSizeClass.widthSizeClass) {
     WindowWidthSizeClass.Compact -> 20.dp
     else -> 60.dp
   }
-  Timber.d("[CatalogSettingsRoute] settingsUiState=$settingsUiState")
-  when (settingsUiState) {
+  Timber.d("[CatalogSettingsRoute] settingsUiState=${routeParams.settingsUiState}")
+  when (routeParams.settingsUiState) {
     null -> {
       Text(
         text = "No Settings :( ",
@@ -70,58 +56,25 @@ fun CatalogSettingsRoute(
         modifier = modifier,
         windowSizeClass = windowSizeClass,
         columnPaddingHorizontal = columnPaddingHorizontal,
-        settingsUiState = settingsUiState,
-        updateBooleanSettingAction = updateBooleanSettingAction,
-        openExternalUrlAction = openExternalUrlAction,
-        openLicensesSectionAction = openLicensesSectionAction
+        routeParams = routeParams
       )
     }
   }
 }
 
-@Composable
-fun CatalogSettingsScreen(
-  windowSizeClass: WindowSizeClass,
-  columnPaddingHorizontal: Dp,
-  settingsUiState: CatalogSetting,
-  updateBooleanSettingAction: (String, Boolean) -> Unit,
-  openExternalUrlAction: (String) -> Unit,
-  openLicensesSectionAction: () -> Unit,
-  modifier: Modifier = Modifier
-) {
-  Column(
-    modifier = modifier
-      .fillMaxWidth()
-      .padding(horizontal = columnPaddingHorizontal)
-      .verticalScroll(rememberScrollState())
-  ) {
-    SettingsTitleText(windowSizeClass = windowSizeClass)
-    SettingsSwitch(
-      title = {
-        Text(text = stringResource(R.string.settings_label_dark_theme))
-      },
-      state = rememberBooleanSettingState(settingsUiState.isAppInDarkTheme),
-      onCheckedChange = { toggled ->
-        updateBooleanSettingAction("dark_theme", toggled)
-      }
-    )
-    SettingsSwitch(
-      enabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
-      title = {
-        Text(text = stringResource(R.string.settings_label_dynamic_colors))
-      },
-      state = rememberBooleanSettingState(settingsUiState.isUsingDynamicColors),
-      onCheckedChange = { toggled ->
-        updateBooleanSettingAction("dynamic_colors", toggled)
-      }
-    )
-    Divider(modifier = Modifier.padding(bottom = 10.dp))
-    ThirdPartySoftwareSettingMenuLink(openLicensesSectionAction)
-    PrivacyPolicySettingMenuLink(settingsUiState, openExternalUrlAction)
-    TermsConditionsSettingMenuLink(settingsUiState, openExternalUrlAction)
-    PersonalDataPolicySettingMenuLink(settingsUiState, openExternalUrlAction)
-    Divider(modifier = Modifier.padding(bottom = 10.dp))
-    AppVersionSettingsMenuLink(settingsUiState)
-  }
-}
-
+/**
+ * Data class that represents catalog settings ui route params.
+ *
+ * @author marlonlom
+ *
+ * @property settingsUiState Catalog setting value.
+ * @property updateBooleanSettingAction Action for updating boolean settings.
+ * @property openExternalUrlAction Action for opening external urls.
+ * @property openLicensesSectionAction Action for opening licenses content.
+ */
+data class CatalogSettingsRouteParams(
+  val settingsUiState: CatalogSetting?,
+  val updateBooleanSettingAction: (String, Boolean) -> Unit,
+  val openExternalUrlAction: (String) -> Unit,
+  val openLicensesSectionAction: () -> Unit
+)

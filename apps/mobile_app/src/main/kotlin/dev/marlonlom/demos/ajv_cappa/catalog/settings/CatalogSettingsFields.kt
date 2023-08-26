@@ -21,45 +21,81 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.settings
 
+import android.os.Build
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.alorma.compose.settings.storage.base.rememberBooleanSettingState
 import com.alorma.compose.settings.ui.SettingsMenuLink
+import com.alorma.compose.settings.ui.SettingsSwitch
 import dev.marlonlom.demos.ajv_cappa.R
 
 @Composable
+fun DarkThemeSettingSwitch(
+  routeParams: CatalogSettingsRouteParams
+) {
+  SettingsSwitch(
+    title = {
+      Text(text = stringResource(R.string.settings_label_dark_theme))
+    },
+    state = rememberBooleanSettingState(
+      routeParams.settingsUiState!!.isAppInDarkTheme
+    ),
+    onCheckedChange = { toggled ->
+      routeParams.updateBooleanSettingAction("dark_theme", toggled)
+    }
+  )
+}
+
+@Composable
+fun DynamicColorsSettingSwitch(
+  routeParams: CatalogSettingsRouteParams
+) {
+  SettingsSwitch(
+    enabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
+    title = {
+      Text(text = stringResource(R.string.settings_label_dynamic_colors))
+    },
+    state = rememberBooleanSettingState(routeParams.settingsUiState!!.isUsingDynamicColors),
+    onCheckedChange = { toggled ->
+      routeParams.updateBooleanSettingAction("dynamic_colors", toggled)
+    }
+  )
+}
+
+@Composable
 fun ThirdPartySoftwareSettingMenuLink(
-  openLicensesSectionAction: () -> Unit
+  routeParams: CatalogSettingsRouteParams
 ) {
   SettingsMenuLink(
     title = {
       Text(text = stringResource(R.string.settings_label_third_party_software))
     },
     onClick = {
-      openLicensesSectionAction()
+      routeParams.openLicensesSectionAction()
     }
   )
 }
 
 @Composable
 fun TermsConditionsSettingMenuLink(
-  settingsUiState: CatalogSetting,
-  openExternalUrlAction: (String) -> Unit
+  routeParams: CatalogSettingsRouteParams
 ) {
   SettingsMenuLink(
     title = {
       Text(text = stringResource(R.string.settings_label_terms_conditions))
     },
     onClick = {
-      openExternalUrlAction(settingsUiState.termsConditionsUrl)
+      routeParams.openExternalUrlAction(
+        routeParams.settingsUiState!!.termsConditionsUrl
+      )
     }
   )
 }
 
 @Composable
 fun PersonalDataPolicySettingMenuLink(
-  settingsUiState: CatalogSetting,
-  openExternalUrlAction: (String) -> Unit
+  routeParams: CatalogSettingsRouteParams
 ) {
   SettingsMenuLink(
     title = {
@@ -68,22 +104,25 @@ fun PersonalDataPolicySettingMenuLink(
       )
     },
     onClick = {
-      openExternalUrlAction(settingsUiState.personalDataTreatmentPolicyUrl)
+      routeParams.openExternalUrlAction(
+        routeParams.settingsUiState!!.personalDataTreatmentPolicyUrl
+      )
     }
   )
 }
 
 @Composable
 fun PrivacyPolicySettingMenuLink(
-  settingsUiState: CatalogSetting,
-  openExternalUrlAction: (String) -> Unit
+  routeParams: CatalogSettingsRouteParams
 ) {
   SettingsMenuLink(
     title = {
       Text(text = stringResource(R.string.settings_label_privacy_policy))
     },
     onClick = {
-      openExternalUrlAction(settingsUiState.privacyPolicyUrl)
+      routeParams.openExternalUrlAction(
+        routeParams.settingsUiState!!.privacyPolicyUrl
+      )
     }
   )
 }
@@ -91,14 +130,14 @@ fun PrivacyPolicySettingMenuLink(
 
 @Composable
 fun AppVersionSettingsMenuLink(
-  settingsUiState: CatalogSetting
+  routeParams: CatalogSettingsRouteParams
 ) {
   SettingsMenuLink(
     title = {
       Text(text = stringResource(R.string.settings_label_app_version))
     },
     subtitle = {
-      Text(text = settingsUiState.appVersion)
+      Text(text = routeParams.settingsUiState!!.appVersion)
     },
     onClick = {}
   )

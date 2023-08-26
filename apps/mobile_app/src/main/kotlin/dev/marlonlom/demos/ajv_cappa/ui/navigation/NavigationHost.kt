@@ -35,6 +35,7 @@ import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchRoute
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState
 import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSetting
 import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRoute
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRouteParams
 import timber.log.Timber
 
 @Composable
@@ -44,15 +45,12 @@ fun NavigationHost(
   listUiState: CatalogListState,
   detailUiState: CatalogDetail?,
   searchState: CatalogSearchState,
-  settingsUiState: CatalogSetting?,
   onBackPressed: () -> Unit,
   gotoDetailRoute: (Long) -> Unit,
   findSingleItem: (Long) -> Unit,
   onInputSearchTextChange: (String) -> Unit,
   onSearchCleared: () -> Unit,
-  updateBooleanSettingAction: (String, Boolean) -> Unit,
-  openExternalUrlAction: (String) -> Unit,
-  openLicensesSectionAction: () -> Unit,
+  catalogSettingsRouteParams: CatalogSettingsRouteParams,
   modifier: Modifier = Modifier
 ) {
 
@@ -87,10 +85,7 @@ fun NavigationHost(
     composable(route = Destination.Settings.route) {
       CatalogSettingsRoute(
         windowSizeClass = windowSizeClass,
-        settingsUiState = settingsUiState,
-        openExternalUrlAction = openExternalUrlAction,
-        updateBooleanSettingAction = updateBooleanSettingAction,
-        openLicensesSectionAction = openLicensesSectionAction,
+        routeParams = catalogSettingsRouteParams,
         modifier = modifier
       )
     }
