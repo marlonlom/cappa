@@ -21,17 +21,22 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Divider
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
 
 @Composable
 fun CatalogSettingsScreen(
@@ -40,22 +45,62 @@ fun CatalogSettingsScreen(
   routeParams: CatalogSettingsRouteParams,
   modifier: Modifier = Modifier
 ) {
+  val gridColumnsCount = when {
+    AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 4
+    windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> 3
+    else -> 2
+  }
+
+  val span: (LazyGridItemSpanScope.() -> GridItemSpan) =
+    {
+      GridItemSpan(
+        when {
+          AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> 2
+          AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 4
+          else -> maxCurrentLineSpan
+        }
+      )
+    }
+
   Column(
     modifier = modifier
       .fillMaxWidth()
       .padding(horizontal = columnPaddingHorizontal)
-      .verticalScroll(rememberScrollState())
   ) {
     SettingsTitleText(windowSizeClass = windowSizeClass)
-    DarkThemeSettingSwitch(routeParams)
-    DynamicColorsSettingSwitch(routeParams)
-    Divider(modifier = Modifier.padding(bottom = 10.dp))
-    ThirdPartySoftwareSettingMenuLink(routeParams)
-    PrivacyPolicySettingMenuLink(routeParams)
-    TermsConditionsSettingMenuLink(routeParams)
-    PersonalDataPolicySettingMenuLink(routeParams)
-    Divider(modifier = Modifier.padding(bottom = 10.dp))
-    AppVersionSettingsMenuLink(routeParams)
+    LazyVerticalGrid(
+      columns = GridCells.Fixed(gridColumnsCount),
+      horizontalArrangement = Arrangement.spacedBy(20.dp),
+      verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+      item(span = span) {
+        DarkThemeSettingSwitch(routeParams)
+      }
+      item(span = span) {
+        DynamicColorsSettingSwitch(routeParams)
+      }
+      item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+        Divider(modifier = Modifier.padding(bottom = 10.dp))
+      }
+      item(span = span) {
+        ThirdPartySoftwareSettingMenuLink(routeParams)
+      }
+      item(span = span) {
+        PrivacyPolicySettingMenuLink(routeParams)
+      }
+      item(span = span) {
+        TermsConditionsSettingMenuLink(routeParams)
+      }
+      item(span = span) {
+        PersonalDataPolicySettingMenuLink(routeParams)
+      }
+      item(span = { GridItemSpan(maxCurrentLineSpan) }) {
+        Divider(modifier = Modifier.padding(bottom = 10.dp))
+      }
+      item(span = span) {
+        AppVersionSettingsMenuLink(routeParams)
+      }
+    }
   }
 }
 
