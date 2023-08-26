@@ -41,16 +41,13 @@ internal class CatalogDetailViewModelTest {
   fun setUp() {
     viewModel = CatalogDetailViewModel(
       CatalogDetailRepository(
-        FakeLocalDataSource(
-          CatalogDataService()
-        )
+        FakeLocalDataSource(CatalogDataService())
       )
     )
   }
 
-
   @Test
-  fun shouldFindCatalogDetailsById() = runTest {
+  fun `Should find catalog details by id`() = runTest {
     val expectedItemId = 15396L
     viewModel.find(expectedItemId)
     val catalogDetail = viewModel.detail.value
@@ -67,7 +64,7 @@ internal class CatalogDetailViewModelTest {
   }
 
   @Test
-  fun shouldNotFindCatalogDetailsById() = runTest {
+  fun `Should not find catalog details by id`() = runTest {
     val expectedItemId = 9999L
     viewModel.find(expectedItemId)
     val catalogDetail = viewModel.detail.value
