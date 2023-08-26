@@ -44,7 +44,6 @@ import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRouteParams
-import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
@@ -70,7 +69,7 @@ fun MainScaffold(
   catalogListViewModel: CatalogListViewModel,
   catalogDetailViewModel: CatalogDetailViewModel,
   catalogSearchViewModel: CatalogSearchViewModel,
-  catalogSettingsViewModel: CatalogSettingsViewModel
+  catalogSettingsRouteParams: CatalogSettingsRouteParams
 ) {
   val coroutineScope = rememberCoroutineScope()
   val navController: NavHostController = rememberNavController()
@@ -81,7 +80,6 @@ fun MainScaffold(
   val isDetailDestination = !Destination.listOf().map { it.route }.contains(currentRoute)
   val catalogListState = catalogListViewModel.uiState.collectAsStateWithLifecycle()
   val catalogSearchState = catalogSearchViewModel.uiState.collectAsStateWithLifecycle()
-  val catalogSettingsUiState = catalogSettingsViewModel.uiState.value
 
   val onNavigationIconClicked: () -> Unit = {
     navController.popBackStack()
@@ -141,18 +139,7 @@ fun MainScaffold(
           listUiState = catalogListState.value,
           detailUiState = catalogDetailViewModel.detail.value,
           searchState = catalogSearchState.value,
-          catalogSettingsRouteParams = CatalogSettingsRouteParams(
-            settingsUiState = catalogSettingsUiState,
-            updateBooleanSettingAction = { key: String, toggled: Boolean ->
-              Timber.d("[MainScaffold.updateBooleanSettingAction] key=$key, toggled=$toggled")
-              catalogSettingsViewModel.updateBooleanSetting(key, toggled)
-            },
-            openExternalUrlAction = {
-              Timber.d("[MainScaffold.openExternalUrlAction] url=$it")
-            },
-          ) {
-            Timber.d("[MainScaffold.openLicensesSectionAction]")
-          },
+          catalogSettingsRouteParams = catalogSettingsRouteParams,
           onBackPressed = onNavigationIconClicked,
           gotoDetailRoute = { catalogItemId ->
             val detailRoutePath = Destination.Detail.createRoute(catalogItemId)
