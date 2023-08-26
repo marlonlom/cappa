@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dev.marlonlom.demos.ajv_cappa.local.data.AppSetting
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -49,15 +50,27 @@ class CatalogSettingsViewModel(
     fetchSettings()
   }
 
+  fun updateBooleanSetting(key: String, toggled: Boolean) {
+    viewModelScope.launch {
+      repository.updateBooleanSetting(key, toggled.toString())
+      val settingsList = repository.getAppSettings()
+      updateUiState(settingsList)
+    }
+  }
+
   private fun fetchSettings() {
     viewModelScope.launch {
       val settingsList = repository.getAppSettings()
-      settingsList.collect { settings ->
-        val containsAllKeys = settings.all { s -> SETTING_KEYS.contains(s.key) }
-        uiState.value = when {
-          containsAllKeys -> generateSettingsInfoFromList(settings)
-          else -> null
-        }
+      updateUiState(settingsList)
+    }
+  }
+
+  private suspend fun updateUiState(settingsList: Flow<List<AppSetting>>) {
+    settingsList.collect { settings ->
+      val containsAllKeys = settings.all { s -> SETTING_KEYS.contains(s.key) }
+      uiState.value = when {
+        containsAllKeys -> generateSettingsInfoFromList(settings)
+        else -> null
       }
     }
   }

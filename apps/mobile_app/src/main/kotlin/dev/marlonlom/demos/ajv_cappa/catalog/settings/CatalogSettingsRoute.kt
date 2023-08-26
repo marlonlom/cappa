@@ -37,8 +37,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.alorma.compose.settings.storage.base.rememberBooleanSettingState
 import com.alorma.compose.settings.ui.SettingsSwitch
 import dev.marlonlom.demos.ajv_cappa.R
+import timber.log.Timber
 
 @Composable
 fun CatalogSettingsRoute(
@@ -53,7 +55,7 @@ fun CatalogSettingsRoute(
     WindowWidthSizeClass.Compact -> 20.dp
     else -> 60.dp
   }
-
+  Timber.d("[CatalogSettingsRoute] settingsUiState=$settingsUiState")
   when (settingsUiState) {
     null -> {
       Text(
@@ -75,7 +77,6 @@ fun CatalogSettingsRoute(
       )
     }
   }
-
 }
 
 @Composable
@@ -99,6 +100,7 @@ fun CatalogSettingsScreen(
       title = {
         Text(text = stringResource(R.string.settings_label_dark_theme))
       },
+      state = rememberBooleanSettingState(settingsUiState.isAppInDarkTheme),
       onCheckedChange = { toggled ->
         updateBooleanSettingAction("dark_theme", toggled)
       }
@@ -108,6 +110,7 @@ fun CatalogSettingsScreen(
       title = {
         Text(text = stringResource(R.string.settings_label_dynamic_colors))
       },
+      state = rememberBooleanSettingState(settingsUiState.isUsingDynamicColors),
       onCheckedChange = { toggled ->
         updateBooleanSettingAction("dynamic_colors", toggled)
       }
