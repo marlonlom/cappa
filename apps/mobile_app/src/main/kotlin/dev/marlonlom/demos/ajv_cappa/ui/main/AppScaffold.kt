@@ -161,8 +161,9 @@ fun MainScaffold(
           onSearchCleared = {
             clearSearchAction()
           },
-          updateBooleanSettingAction = { key: String, checked: Boolean ->
-            Timber.d("[MainScaffold.updateBooleanSettingAction] key=$key, checked=$checked")
+          updateBooleanSettingAction = { key: String, toggled: Boolean ->
+            Timber.d("[MainScaffold.updateBooleanSettingAction] key=$key, toggled=$toggled")
+            catalogSettingsViewModel.updateBooleanSetting(key, toggled)
           },
           openExternalUrlAction = {
             Timber.d("[MainScaffold.openExternalUrlAction] url=$it")
