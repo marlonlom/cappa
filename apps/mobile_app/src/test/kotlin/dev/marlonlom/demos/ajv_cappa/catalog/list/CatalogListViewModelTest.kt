@@ -37,7 +37,7 @@ internal class CatalogListViewModelTest {
   private lateinit var viewModel: CatalogListViewModel
 
   @Test
-  fun shouldCheckUiStateValueIsNotEmptyList() = runTest {
+  fun `Should check that Ui state value is not empty list`() = runTest {
     viewModel = CatalogListViewModel(
       CatalogListRepository(
         FakeLocalDataSource(

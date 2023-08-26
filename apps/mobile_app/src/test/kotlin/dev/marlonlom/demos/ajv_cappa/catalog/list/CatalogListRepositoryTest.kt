@@ -43,7 +43,7 @@ internal class CatalogListRepositoryTest {
   }
 
   @Test
-  fun shouldReturnNonEmptyList() = runTest {
+  fun `Should return non empty list`() = runTest {
     val products = repository.getAllProducts().first()
     Assert.assertTrue(products.isNotEmpty())
   }

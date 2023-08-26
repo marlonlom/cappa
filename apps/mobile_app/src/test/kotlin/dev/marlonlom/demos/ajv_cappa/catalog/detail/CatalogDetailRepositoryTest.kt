@@ -45,7 +45,7 @@ internal class CatalogDetailRepositoryTest {
   }
 
   @Test
-  fun shouldReturnSingleProductItem() = runTest {
+  fun `Should return single product item`() = runTest {
     val expectedItem = ProductItem(
       id = 15396L,
       title = "Granizado",
@@ -60,7 +60,7 @@ internal class CatalogDetailRepositoryTest {
   }
 
   @Test
-  fun shouldReturnNullProductItem() = runTest {
+  fun `Should return null product item`() = runTest {
     val foundProduct = repository.find(1L).first()
     Assert.assertNull(foundProduct)
   }
