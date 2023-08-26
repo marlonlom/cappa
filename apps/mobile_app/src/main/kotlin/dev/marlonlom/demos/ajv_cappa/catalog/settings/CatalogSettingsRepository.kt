@@ -21,7 +21,11 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.settings
 
+import dev.marlonlom.demos.ajv_cappa.local.data.AppSetting
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Catalog list repository class.
@@ -31,7 +35,8 @@ import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
  * @property localDataSource local data source dependency
  */
 class CatalogSettingsRepository(
-  private val localDataSource: LocalDataSource
+  private val localDataSource: LocalDataSource,
+  private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
 
   /**
@@ -41,4 +46,16 @@ class CatalogSettingsRepository(
    *
    */
   fun getAppSettings() = localDataSource.getAppSettings()
+
+  /**
+   * Updates boolean setting.
+   *
+   * @param key Boolean setting key name.
+   * @param flag true/false for boolean setting value.
+   */
+  suspend fun updateBooleanSetting(
+    key: String, flag: String
+  ) = withContext(coroutineDispatcher) {
+    localDataSource.updateBooleanSetting(AppSetting(key, flag))
+  }
 }
