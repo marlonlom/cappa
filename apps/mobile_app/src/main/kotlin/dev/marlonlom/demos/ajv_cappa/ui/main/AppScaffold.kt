@@ -43,6 +43,7 @@ import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListState
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchState
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsViewModel
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.AppNavigationActions
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.Destination
 import dev.marlonlom.demos.ajv_cappa.ui.navigation.NavigationHost
@@ -67,7 +68,8 @@ fun MainScaffold(
   modifier: Modifier = Modifier,
   catalogListViewModel: CatalogListViewModel,
   catalogDetailViewModel: CatalogDetailViewModel,
-  catalogSearchViewModel: CatalogSearchViewModel
+  catalogSearchViewModel: CatalogSearchViewModel,
+  catalogSettingsViewModel: CatalogSettingsViewModel
 ) {
   val coroutineScope = rememberCoroutineScope()
   val navController: NavHostController = rememberNavController()
@@ -78,6 +80,7 @@ fun MainScaffold(
   val isDetailDestination = !Destination.listOf().map { it.route }.contains(currentRoute)
   val catalogListState = catalogListViewModel.uiState.collectAsStateWithLifecycle()
   val catalogSearchState = catalogSearchViewModel.uiState.collectAsStateWithLifecycle()
+  val catalogSettingsUiState = catalogSettingsViewModel.uiState.value
 
   val onNavigationIconClicked: () -> Unit = {
     navController.popBackStack()
@@ -137,6 +140,7 @@ fun MainScaffold(
           listUiState = catalogListState.value,
           detailUiState = catalogDetailViewModel.detail.value,
           searchState = catalogSearchState.value,
+          settingsUiState = catalogSettingsUiState,
           onBackPressed = onNavigationIconClicked,
           gotoDetailRoute = { catalogItemId ->
             val detailRoutePath = Destination.Detail.createRoute(catalogItemId)
@@ -156,6 +160,15 @@ fun MainScaffold(
           },
           onSearchCleared = {
             clearSearchAction()
+          },
+          updateBooleanSettingAction = { key: String, checked: Boolean ->
+            Timber.d("[MainScaffold.updateBooleanSettingAction] key=$key, checked=$checked")
+          },
+          openExternalUrlAction = {
+            Timber.d("[MainScaffold.openExternalUrlAction] url=$it")
+          },
+          openLicensesSectionAction = {
+            Timber.d("[MainScaffold.openLicensesSectionAction]")
           },
           modifier = hostModifier.padding(paddingValues)
         )

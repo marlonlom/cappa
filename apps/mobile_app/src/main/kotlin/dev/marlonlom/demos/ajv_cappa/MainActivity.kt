@@ -33,6 +33,8 @@ import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListRepository
 import dev.marlonlom.demos.ajv_cappa.catalog.list.CatalogListViewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchRepository
 import dev.marlonlom.demos.ajv_cappa.catalog.search.CatalogSearchViewModel
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRepository
+import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsViewModel
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffold
@@ -81,12 +83,21 @@ class MainActivity : ComponentActivity() {
         )
       )
 
+      val catalogSettingsViewModel: CatalogSettingsViewModel = viewModel(
+        factory = CatalogSettingsViewModel.factory(
+          repository = CatalogSettingsRepository(
+            localDataSource = localDataSource
+          )
+        )
+      )
+
       CappaTheme {
         MainScaffold(
           windowSizeClass = windowSizeClass,
           catalogListViewModel = catalogListViewModel,
           catalogDetailViewModel = catalogDetailViewModel,
-          catalogSearchViewModel = catalogSearchViewModel
+          catalogSearchViewModel = catalogSearchViewModel,
+          catalogSettingsViewModel = catalogSettingsViewModel
         )
       }
     }
