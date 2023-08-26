@@ -39,5 +39,5 @@
   <string name="settings_label_privacy_policy">Política de privacidad</string>
   <string name="settings_label_terms_conditions">Términos y condiciones</string>
   <string name="settings_label_third_party_software">Software de terceros</string>
-  <string name="settings_label_app_version">Application version</string>
+  <string name="settings_label_app_version">Versión de la aplicación</string>
 </resources>
