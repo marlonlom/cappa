@@ -24,11 +24,20 @@
   <string name="destination_search">Buscar</string>
   <string name="destination_settings">Ajustes</string>
   <string name="destination_detail">Detalle</string>
-  <string name="home_title_enjoy">Disfruta</string>
+  <string name="home_title_enjoy">disfruta</string>
   <string name="home_title_exclusive_items">Productos exclusivos</string>
   <string name="home_text_list_loading">El catálogo se está cargando…</string>
-  <string name="search_title_idem">Buscar</string>
+  <string name="search_title_idem">buscar</string>
   <string name="search_title_catalog_products">Productos del catálogo</string>
   <string name="search_text_list_loading">Buscando en el catálogo…</string>
   <string name="detail_text_points">Puntos</string>
+  <string name="settings_title_application">configuraciones de la</string>
+  <string name="settings_title_txt">Aplicación</string>
+  <string name="settings_label_dark_theme">Tema oscuro</string>
+  <string name="settings_label_dynamic_colors">Colores dinámicos</string>
+  <string name="settings_label_personal_data_treatment_policy">Política tratamiento datos personales</string>
+  <string name="settings_label_privacy_policy">Política de privacidad</string>
+  <string name="settings_label_terms_conditions">Términos y condiciones</string>
+  <string name="settings_label_third_party_software">Software de terceros</string>
+  <string name="settings_label_app_version">Application version</string>
 </resources>
