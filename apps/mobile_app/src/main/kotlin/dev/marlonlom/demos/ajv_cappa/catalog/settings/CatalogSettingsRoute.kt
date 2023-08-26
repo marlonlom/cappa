@@ -37,15 +37,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.alorma.compose.settings.ui.SettingsSwitch
 import dev.marlonlom.demos.ajv_cappa.R
-import timber.log.Timber
 
 @Composable
 fun CatalogSettingsRoute(
   windowSizeClass: WindowSizeClass,
   settingsUiState: CatalogSetting?,
+  updateBooleanSettingAction: (String, Boolean) -> Unit,
   openExternalUrlAction: (String) -> Unit,
   openLicensesSectionAction: () -> Unit,
   modifier: Modifier = Modifier
@@ -70,6 +69,7 @@ fun CatalogSettingsRoute(
         windowSizeClass = windowSizeClass,
         columnPaddingHorizontal = columnPaddingHorizontal,
         settingsUiState = settingsUiState,
+        updateBooleanSettingAction = updateBooleanSettingAction,
         openExternalUrlAction = openExternalUrlAction,
         openLicensesSectionAction = openLicensesSectionAction
       )
@@ -83,6 +83,7 @@ fun CatalogSettingsScreen(
   windowSizeClass: WindowSizeClass,
   columnPaddingHorizontal: Dp,
   settingsUiState: CatalogSetting,
+  updateBooleanSettingAction: (String, Boolean) -> Unit,
   openExternalUrlAction: (String) -> Unit,
   openLicensesSectionAction: () -> Unit,
   modifier: Modifier = Modifier
@@ -99,7 +100,7 @@ fun CatalogSettingsScreen(
         Text(text = stringResource(R.string.settings_label_dark_theme))
       },
       onCheckedChange = { toggled ->
-        Timber.d("[SettingsRoute.onCheckedChange] checked: $toggled")
+        updateBooleanSettingAction("dark_theme", toggled)
       }
     )
     SettingsSwitch(
@@ -107,17 +108,12 @@ fun CatalogSettingsScreen(
       title = {
         Text(text = stringResource(R.string.settings_label_dynamic_colors))
       },
-      onCheckedChange = {}
-    )
-    Divider(modifier = Modifier.padding(bottom = 10.dp))
-    SettingsMenuLink(
-      title = {
-        Text(text = stringResource(R.string.settings_label_third_party_software))
-      },
-      onClick = {
-        openLicensesSectionAction()
+      onCheckedChange = { toggled ->
+        updateBooleanSettingAction("dynamic_colors", toggled)
       }
     )
+    Divider(modifier = Modifier.padding(bottom = 10.dp))
+    ThirdPartySoftwareSettingMenuLink(openLicensesSectionAction)
     PrivacyPolicySettingMenuLink(settingsUiState, openExternalUrlAction)
     TermsConditionsSettingMenuLink(settingsUiState, openExternalUrlAction)
     PersonalDataPolicySettingMenuLink(settingsUiState, openExternalUrlAction)
@@ -126,65 +122,3 @@ fun CatalogSettingsScreen(
   }
 }
 
-@Composable
-private fun TermsConditionsSettingMenuLink(
-  settingsUiState: CatalogSetting,
-  openExternalUrlAction: (String) -> Unit
-) {
-  SettingsMenuLink(
-    title = {
-      Text(text = stringResource(R.string.settings_label_terms_conditions))
-    },
-    onClick = {
-      openExternalUrlAction(settingsUiState.termsConditionsUrl)
-    }
-  )
-}
-
-@Composable
-private fun PersonalDataPolicySettingMenuLink(
-  settingsUiState: CatalogSetting,
-  openExternalUrlAction: (String) -> Unit
-) {
-  SettingsMenuLink(
-    title = {
-      Text(
-        text = stringResource(R.string.settings_label_personal_data_treatment_policy)
-      )
-    },
-    onClick = {
-      openExternalUrlAction(settingsUiState.personalDataTreatmentPolicyUrl)
-    }
-  )
-}
-
-@Composable
-private fun PrivacyPolicySettingMenuLink(
-  settingsUiState: CatalogSetting,
-  openExternalUrlAction: (String) -> Unit
-) {
-  SettingsMenuLink(
-    title = {
-      Text(text = stringResource(R.string.settings_label_privacy_policy))
-    },
-    onClick = {
-      openExternalUrlAction(settingsUiState.privacyPolicyUrl)
-    }
-  )
-}
-
-
-@Composable
-private fun AppVersionSettingsMenuLink(
-  settingsUiState: CatalogSetting
-) {
-  SettingsMenuLink(
-    title = {
-      Text(text = stringResource(R.string.settings_label_app_version))
-    },
-    subtitle = {
-      Text(text = settingsUiState.appVersion)
-    },
-    onClick = {}
-  )
-}
