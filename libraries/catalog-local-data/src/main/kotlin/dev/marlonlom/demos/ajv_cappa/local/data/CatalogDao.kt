@@ -38,11 +38,16 @@ import kotlinx.coroutines.flow.Flow
  */
 @Entity(tableName = "cappa_product")
 data class ProductItem(
-  @ColumnInfo(name = "product_id") @PrimaryKey() val id: Long,
-  @ColumnInfo(name = "product_title") val title: String,
-  @ColumnInfo(name = "product_slug") val slug: String,
-  @ColumnInfo(name = "product_title_normalized") val titleNormalized: String,
-  @ColumnInfo(name = "product_picture") val picture: String
+  @PrimaryKey @ColumnInfo(name = "product_id")
+  val id: Long,
+  @ColumnInfo(name = "product_title")
+  val title: String,
+  @ColumnInfo(name = "product_slug")
+  val slug: String,
+  @ColumnInfo(name = "product_title_normalized")
+  val titleNormalized: String,
+  @ColumnInfo(name = "product_picture")
+  val picture: String
 )
 
 /**
@@ -58,10 +63,24 @@ data class ProductItem(
   primaryKeys = ["punctuation_id", "punctuation_product_id"]
 )
 data class ProductItemPoint(
-  @ColumnInfo(name = "punctuation_id") val id: Long,
-  @ColumnInfo(name = "punctuation_product_id") val productId: Long,
-  @ColumnInfo(name = "punctuation_label") val label: String,
-  @ColumnInfo(name = "punctuation_points") val points: Long
+  @ColumnInfo(name = "punctuation_id")
+  val id: Long,
+  @ColumnInfo(name = "punctuation_product_id")
+  val productId: Long,
+  @ColumnInfo(name = "punctuation_label")
+  val label: String,
+  @ColumnInfo(name = "punctuation_points")
+  val points: Long
+)
+
+
+@Entity(tableName = "cappa_setting")
+data class AppSetting(
+  @PrimaryKey
+  @ColumnInfo(name = "setting_key")
+  val key: String,
+  @ColumnInfo(name = "setting_value")
+  val value: String
 )
 
 /**
@@ -76,7 +95,7 @@ interface CatalogDao {
   /**
    * Query for retrieving product items list.
    *
-   * @return Product items list, or empty list, ><as Flow.
+   * @return Product items list, or empty list, as Flow.
    */
   @Query("SELECT * FROM cappa_product")
   fun getProducts(): Flow<List<ProductItem>>
@@ -102,17 +121,17 @@ interface CatalogDao {
   /**
    * Upsert product items.
    *
-   * @param products product items.
+   * @param products product items as typed array.
    */
-  @Upsert()
+  @Upsert
   fun insertAllProducts(vararg products: ProductItem)
 
   /**
    * Upsert product item punctuations.
    *
-   * @param punctuations product item points.
+   * @param punctuations product item points as typed array.
    */
-  @Upsert()
+  @Upsert
   fun insertAllPunctuations(vararg punctuations: ProductItemPoint)
 
   /**
@@ -135,5 +154,21 @@ interface CatalogDao {
    */
   @Query("SELECT * FROM cappa_product WHERE lower(product_title) LIKE :search")
   fun searchProducts(search: String?): Flow<List<ProductItem>>
+
+  /**
+   * Upsert application settings.
+   *
+   * @param appSettings Application settings data as typed array.
+   */
+  @Upsert
+  fun insertAllSettings(vararg appSettings: AppSetting)
+
+  /**
+   * Returns application settings.
+   *
+   * @return Application settings list, or empty list, as Flow.
+   */
+  @Query("SELECT * FROM cappa_setting")
+  fun getSettings(): Flow<List<AppSetting>>
 
 }

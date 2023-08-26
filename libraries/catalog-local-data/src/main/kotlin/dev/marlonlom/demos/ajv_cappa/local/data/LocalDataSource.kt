@@ -56,14 +56,14 @@ interface LocalDataSource {
   /**
    * Insert all product items.
    *
-   * @param products product items as typed array.
+   * @param products Product items as typed array.
    */
   fun insertAllProducts(vararg products: ProductItem)
 
   /**
    * Insert all punctuations.
    *
-   * @param punctuations punctuation items as typed array.
+   * @param punctuations Punctuation items as typed array.
    */
   fun insertAllPunctuations(vararg punctuations: ProductItemPoint)
 
@@ -84,6 +84,20 @@ interface LocalDataSource {
    * @return
    */
   fun searchProducts(search: String?): Flow<List<ProductItem>>
+
+  /**
+   * Insert all application settings.
+   *
+   * @param appSettings Application setting items as typed array.
+   */
+  fun insertAllSettings(vararg appSettings: AppSetting)
+
+  /**
+   * Returns application settings.
+   *
+   * @return Application settings list, or empty list, as Flow.
+   */
+  fun getAppSettings(): Flow<List<AppSetting>>
 }
 
 /**
@@ -112,5 +126,9 @@ class LocalDataSourceImpl(
 
   override fun deleteAllPunctuations() = appDatabase.catalogDao().deleteAllPunctuations()
   override fun searchProducts(search: String?) = appDatabase.catalogDao().searchProducts(search)
+  override fun insertAllSettings(vararg appSettings: AppSetting) =
+    appDatabase.catalogDao().insertAllSettings(*appSettings)
+
+  override fun getAppSettings(): Flow<List<AppSetting>> = appDatabase.catalogDao().getSettings()
 
 }

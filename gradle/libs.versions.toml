@@ -5,6 +5,7 @@ ksp = "1.8.10-1.0.9"
 
 [libraries]
 # implementation
+alorma-compose-settings-ui-m3 = "com.github.alorma:compose-settings-ui-m3:0.27.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 androidx-core-ktx = "androidx.core:core-ktx:1.10.1"
 androidx-lifecycle-runtime-ktx = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"

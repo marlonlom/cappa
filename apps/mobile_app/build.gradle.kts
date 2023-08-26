@@ -101,6 +101,7 @@ dependencies {
   implementation(libs.androidx.work.runtime.ktx)
   implementation(libs.coil.compose)
   implementation(libs.timber)
+  implementation(libs.alorma.compose.settings.ui.m3)
 
   testImplementation(libs.junit)
   testImplementation(libs.kotlinx.coroutines.test)
