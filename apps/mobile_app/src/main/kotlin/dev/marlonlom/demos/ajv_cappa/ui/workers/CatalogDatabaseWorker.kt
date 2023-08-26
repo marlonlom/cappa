@@ -22,12 +22,16 @@
 package dev.marlonlom.demos.ajv_cappa.ui.workers
 
 import android.content.Context
+import android.os.Build
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import dev.marlonlom.demos.ajv_cappa.BuildConfig
+import dev.marlonlom.demos.ajv_cappa.R
 import dev.marlonlom.demos.ajv_cappa.catalog.list.slug
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
+import dev.marlonlom.demos.ajv_cappa.local.data.AppSetting
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSource
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
 import dev.marlonlom.demos.ajv_cappa.local.data.ProductItem
@@ -72,6 +76,10 @@ class CatalogDatabaseWorker(
         }
       }.flatten()
 
+    val defaultSettings: List<AppSetting> = defaultSettings(applicationContext).let { map ->
+      map.entries.map { entry -> AppSetting(entry.key, entry.value) }
+    }
+
     val appDatabase = AppDatabase.getInstance(applicationContext)
     val localDataSource: LocalDataSource = LocalDataSourceImpl(appDatabase)
     with(localDataSource) {
@@ -79,10 +87,20 @@ class CatalogDatabaseWorker(
       deleteAllProducts()
       insertAllProducts(*dbProductItems.toTypedArray())
       insertAllPunctuations(*dbProductItemPoints.toTypedArray())
+      insertAllSettings(*defaultSettings.toTypedArray())
     }
 
     Result.success()
   }
+
+  private fun defaultSettings(applicationContext: Context) = hashMapOf(
+    "app_version" to BuildConfig.VERSION_NAME,
+    "dark_theme" to false.toString(),
+    "dynamic_colors" to (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S).toString(),
+    "privacy_policy" to applicationContext.getString(R.string.settings_link_privacy_policy),
+    "terms_conditions" to applicationContext.getString(R.string.settings_link_privacy_policy),
+    "personal_data_treatment_policy" to applicationContext.getString(R.string.settings_link_privacy_policy),
+  )
 
   companion object {
     fun run(appContext: Context) {
