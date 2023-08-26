@@ -122,6 +122,10 @@ internal class FakeLocalDataSource(
       map.entries.map { entry -> AppSetting(entry.key, entry.value) }
     })
 
+  override fun updateBooleanSetting(setting: AppSetting) {
+    TODO("Not yet implemented")
+  }
+
   companion object {
     val NONE = ProductItem(-1, "", "", "", "")
 
