@@ -113,7 +113,25 @@ internal class FakeLocalDataSource(
 
   }
 
+  override fun insertAllSettings(vararg appSettings: AppSetting) {
+    TODO("Not yet implemented")
+  }
+
+  override fun getAppSettings(): Flow<List<AppSetting>> =
+    flowOf(settings.let { map ->
+      map.entries.map { entry -> AppSetting(entry.key, entry.value) }
+    })
+
   companion object {
     val NONE = ProductItem(-1, "", "", "", "")
+
+    val settings = hashMapOf(
+      "app_version" to "1.0.0",
+      "dark_theme" to false.toString(),
+      "dynamic_colors" to false.toString(),
+      "privacy_policy" to "https://example.org/app/privacy_policy",
+      "terms_conditions" to "https://example.org/app/terms_conditions",
+      "personal_data_treatment_policy" to "https://example.org/app/personal_data_treatment_policy"
+    )
   }
 }
