@@ -98,6 +98,13 @@ interface LocalDataSource {
    * @return Application settings list, or empty list, as Flow.
    */
   fun getAppSettings(): Flow<List<AppSetting>>
+
+  /**
+   * Updates boolean setting value for selected key.
+   *
+   * @param setting Instance of setting for be updated.
+   */
+  fun updateBooleanSetting(setting: AppSetting)
 }
 
 /**
@@ -130,5 +137,6 @@ class LocalDataSourceImpl(
     appDatabase.catalogDao().insertAllSettings(*appSettings)
 
   override fun getAppSettings(): Flow<List<AppSetting>> = appDatabase.catalogDao().getSettings()
+  override fun updateBooleanSetting(setting: AppSetting) = appDatabase.catalogDao().insertAllSettings(setting)
 
 }
