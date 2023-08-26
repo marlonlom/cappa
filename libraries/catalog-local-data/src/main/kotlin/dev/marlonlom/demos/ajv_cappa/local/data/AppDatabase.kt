@@ -27,8 +27,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-  entities = [ProductItem::class, ProductItemPoint::class],
-  version = 3,
+  entities = [
+    ProductItem::class,
+    ProductItemPoint::class,
+    AppSetting::class
+  ],
+  version = 4,
   exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -50,8 +54,11 @@ abstract class AppDatabase : RoomDatabase() {
     private fun buildDatabase(
       context: Context
     ): AppDatabase =
-      Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
-        .fallbackToDestructiveMigration()
+      Room.databaseBuilder(
+        context = context,
+        klass = AppDatabase::class.java,
+        name = DATABASE_NAME
+      ).fallbackToDestructiveMigration()
         .build()
   }
 }
