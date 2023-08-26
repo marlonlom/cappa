@@ -67,7 +67,7 @@ class CatalogSettingsViewModel(
 
   private suspend fun updateUiState(settingsList: Flow<List<AppSetting>>) {
     settingsList.collect { settings ->
-      val containsAllKeys = settings.all { s -> SETTING_KEYS.contains(s.key) }
+      val containsAllKeys = settings.isNotEmpty() and settings.all { s -> SETTING_KEYS.contains(s.key) }
       uiState.value = when {
         containsAllKeys -> generateSettingsInfoFromList(settings)
         else -> null
