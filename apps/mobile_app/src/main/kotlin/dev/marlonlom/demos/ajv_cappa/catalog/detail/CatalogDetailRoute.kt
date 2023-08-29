@@ -96,14 +96,8 @@ fun DetailScreen(
   val paddingValues = when {
     windowSizeClass.isCompactWidth -> PaddingValues(horizontal = 20.dp, vertical = 0.dp)
     AppScaffoldUtil.isMobileLandscape(windowSizeClass) -> PaddingValues(horizontal = 60.dp, vertical = 20.dp)
-    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> PaddingValues(all = 60.dp)
+    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> PaddingValues(all = 20.dp)
     else -> PaddingValues(horizontal = 60.dp)
-  }
-
-  val columnsCount = when {
-    windowSizeClass.isCompactWidth -> 2
-    AppScaffoldUtil.isTabletLandscape(windowSizeClass) -> 4
-    else -> 3
   }
 
   val productImageSize = when {
@@ -122,7 +116,6 @@ fun DetailScreen(
     catalogItem = catalogDetail!!.product,
     punctuations = catalogDetail.points,
     paddingValues = paddingValues,
-    columnsCount = columnsCount,
     imageSize = productImageSize,
     isHeadingLandscape = isHeadingLandscape
   )
@@ -176,7 +169,7 @@ private fun PointsTitleText() {
       .paddingFromBaseline(top = 20.dp, bottom = 8.dp),
     text = stringResource(id = R.string.detail_text_points),
     maxLines = 1,
-    textAlign = TextAlign.Center,
+    textAlign = TextAlign.Start,
     style = MaterialTheme.typography.bodyLarge,
     fontWeight = FontWeight.Bold
   )
@@ -240,7 +233,6 @@ fun DetailContent(
   catalogItem: ProductItem,
   punctuations: List<ProductItemPoint>,
   paddingValues: PaddingValues,
-  columnsCount: Int,
   imageSize: Dp,
   isHeadingLandscape: Boolean = false
 ) {
@@ -248,7 +240,7 @@ fun DetailContent(
     modifier = Modifier
       .fillMaxWidth()
       .padding(paddingValues),
-    columns = GridCells.Fixed(columnsCount),
+    columns = GridCells.Adaptive(120.dp),
     contentPadding = PaddingValues(16.dp),
     horizontalArrangement = Arrangement.spacedBy(20.dp),
     verticalArrangement = Arrangement.spacedBy(10.dp)
