@@ -60,7 +60,13 @@ internal class CatalogDaoTest {
 
   @Test
   fun shouldInsertProductItem() = runBlocking {
-    val entity = ProductItem(1L, "Pod",,, "https://noimage.no.com/no.png")
+    val entity = ProductItem(
+      id = 1L,
+      title = "Pod",
+      slug = "pod",
+      titleNormalized = "pod",
+      picture = "https://noimage.no.com/no.png"
+    )
     dao.insertAllProducts(entity)
     val list = dao.getProducts().first()
     assertThat(list).contains(entity)
@@ -69,7 +75,13 @@ internal class CatalogDaoTest {
 
   @Test
   fun shouldInsertThenDeleteAllProductItems() = runBlocking {
-    val entity = ProductItem(1L, "Pod",,, "https://noimage.no.com/no.png")
+    val entity = ProductItem(
+      id = 1L,
+      title = "Pod",
+      slug = "pod",
+      titleNormalized = "pod",
+      picture = "https://noimage.no.com/no.png"
+    )
     dao.insertAllProducts(entity)
     dao.deleteAllProducts()
     val list = dao.getProducts().first()
@@ -95,7 +107,13 @@ internal class CatalogDaoTest {
 
   @Test
   fun shouldInsertThenQueryDetailedProductItem() = runBlocking {
-    val product = ProductItem(1L, "Pod",,, "https://noimage.no.com/no.png")
+    val product = ProductItem(
+      id = 1L,
+      title = "Pod",
+      slug = "pod",
+      titleNormalized = "pod",
+      picture = "https://noimage.no.com/no.png"
+    )
     val point = ProductItemPoint(11L, 1L, "Unidad", 1234L)
 
     dao.insertAllProducts(product)
@@ -114,7 +132,13 @@ internal class CatalogDaoTest {
   @Test
   fun shouldSuccessfullySearchProductsByText() = runBlocking {
     val items = "Morbi,Accumsan,Aliquet,Urna,Nulla".split(",").mapIndexed { index, txt ->
-      ProductItem((index + 1).toLong(), txt,,, "https://images.com/${txt.lowercase()}")
+      ProductItem(
+        id = (index + 1).toLong(),
+        title = txt,
+        slug = txt.lowercase(),
+        titleNormalized = txt.lowercase(),
+        picture = "https://images.com/${txt.lowercase()}"
+      )
     }
 
     val pointsPerItem = items
@@ -135,7 +159,13 @@ internal class CatalogDaoTest {
   @Test
   fun shouldReturnEmptyResultsInSearchProductsByText() = runBlocking {
     val items = "Morbi,Accumsan,Aliquet,Urna,Nulla".split(",").mapIndexed { index, txt ->
-      ProductItem((index + 1).toLong(), txt,,, "https://images.com/${txt.lowercase()}")
+      ProductItem(
+        id = (index + 1).toLong(),
+        title = txt,
+        slug = txt.lowercase(),
+        titleNormalized = txt.lowercase(),
+        picture = "https://images.com/${txt.lowercase()}"
+      )
     }
 
     val pointsPerItem = items
