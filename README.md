@@ -37,7 +37,7 @@ settings.
   landscape UI.
 - Coroutines.
 - Local storage with Room.
-- MVVM pattern (ViewModel, repository, data sources).
+- MVVM pattern (views (Composables), ViewModel, repository, data sources).
 - WorkManager for background tasks.
 - Needs no special permissions on Android 6.0+.
 
