@@ -21,9 +21,15 @@
 
 package dev.marlonlom.demos.ajv_cappa.ui.main
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+
 
 object AppScaffoldUtil {
 
@@ -38,9 +44,21 @@ object AppScaffoldUtil {
   fun canShowBottomBar(windowSizeClass: WindowSizeClass, isDetailDestination: Boolean) =
     !isDetailDestination && !windowSizeClass.isExpandedWidth
 
-  fun isTabletLandscape(wsc: WindowSizeClass) = !wsc.isCompactWidth and wsc.isMediumHeight
+  fun isTabletLandscape(wsc: WindowSizeClass) = wsc.isExpandedWidth and wsc.isMediumHeight
 
   fun isMobileLandscape(wsc: WindowSizeClass) = wsc.isExpandedWidth and wsc.isCompactHeight
+
+  fun openCustomTab(context: Context, url: String) {
+    val builder = CustomTabsIntent.Builder()
+      .setShowTitle(true)
+      .setInstantAppsEnabled(true)
+      .setDefaultColorSchemeParams(
+        CustomTabColorSchemeParams.Builder().build()
+      ).build()
+
+    builder.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    builder.launchUrl(context, Uri.parse(url))
+  }
 }
 
 val WindowSizeClass.isCompactHeight: Boolean

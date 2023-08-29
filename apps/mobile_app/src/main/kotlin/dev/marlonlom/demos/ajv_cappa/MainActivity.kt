@@ -27,6 +27,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailRepository
 import dev.marlonlom.demos.ajv_cappa.catalog.detail.CatalogDetailViewModel
@@ -39,6 +40,7 @@ import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsRouteParams
 import dev.marlonlom.demos.ajv_cappa.catalog.settings.CatalogSettingsViewModel
 import dev.marlonlom.demos.ajv_cappa.local.data.AppDatabase
 import dev.marlonlom.demos.ajv_cappa.local.data.LocalDataSourceImpl
+import dev.marlonlom.demos.ajv_cappa.ui.main.AppScaffoldUtil
 import dev.marlonlom.demos.ajv_cappa.ui.main.MainScaffold
 import dev.marlonlom.demos.ajv_cappa.ui.theme.CappaTheme
 import timber.log.Timber
@@ -50,9 +52,10 @@ class MainActivity : ComponentActivity() {
     setContent {
       val windowSizeClass = calculateWindowSizeClass(this)
       Timber.d("[MainActivity] windowSizeClass=$windowSizeClass")
+      val localContext = LocalContext.current
 
       val appDatabase = AppDatabase.getInstance(
-        context = applicationContext
+        context = localContext
       )
 
       val localDataSource = LocalDataSourceImpl(
@@ -112,6 +115,7 @@ class MainActivity : ComponentActivity() {
             },
             openExternalUrlAction = {
               Timber.d("[MainScaffold.openExternalUrlAction] url=$it")
+              AppScaffoldUtil.openCustomTab(localContext, it)
             },
             openLicensesSectionAction = {
               Timber.d("[MainScaffold.openLicensesSectionAction]")
