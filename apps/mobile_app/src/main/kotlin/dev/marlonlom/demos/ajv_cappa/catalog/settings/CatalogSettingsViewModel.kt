@@ -61,6 +61,7 @@ class CatalogSettingsViewModel(
   private fun fetchSettings() {
     viewModelScope.launch {
       val settingsList = repository.getAppSettings()
+      Timber.d("[CatalogSettingsViewModel.fetchSettings] settingsList=$settingsList")
       updateUiState(settingsList)
     }
   }
