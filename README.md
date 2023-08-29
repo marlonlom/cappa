@@ -25,7 +25,6 @@ settings.
 | Search   | dev.marlonlom.demos.ajv_cappa.catalog.search   | This screen allow to do search for catalog products and select one for view it's detail.     |
 | Settings | dev.marlonlom.demos.ajv_cappa.catalog.settings | This screen allow to change the application settings, such as dark theme and dynamic colors. |
 
-
 ## Other Features
 
 - Completely ad-free.
@@ -41,16 +40,12 @@ settings.
 - WorkManager for background tasks.
 - Needs no special permissions on Android 6.0+.
 
-
 ## Screenshots
 
 The following are the location for screenshots of the mobile app, by form factor and screen orientation:
 
-- Phone (portrait) [LICENSE](screenshots/phone-portrait)
-- Phone (landscape) [LICENSE](screenshots/phone-landscape)
-- Tablet (portrait) [LICENSE](screenshots/tablet-portrait)
-- Tablet (landscape) [LICENSE](screenshots/tablet-landscape)
-
+- Phone [(portrait)](screenshots/phone-portrait) [(landscape)](screenshots/phone-landscape)
+- Tablet [(portrait)](screenshots/tablet-portrait) [(landscape)](screenshots/tablet-landscape)
 
 ## License
 
