@@ -4,12 +4,10 @@
 ![Build Status](https://img.shields.io/github/actions/workflow/status/marlonlom/ajv-cappa/build.yml)
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/marlonlom/ajv-cappa/main)
 
-
 ![cappa screens](screenshots/cappa_all_screens-light.png)
 
-Demo android application built with [Jetpack Compose](https://developer.android.com/jetpack/compose). The goal of the demo application is to showcase points and product
-catalog listing for "Amigos Juan Valdez" program.
-
+Demo android application built with [Jetpack Compose](https://developer.android.com/jetpack/compose). The goal of the
+demo application is to showcase points and product catalog listing for "Amigos Juan Valdez" program.
 
 ## Application features
 
@@ -33,6 +31,14 @@ settings.
 - Completely ad-free.
 - Light/Dark theming.
 - Dynamic color theming (enabled for android 12 or superior).
+- Uses `MaterialTheme` composable and M3 components.
+- Custom fonts: [Nunito](https://fonts.google.com/specimen/Nunito).
+- Navigation components: Using `NavigationBar` for mobile phone portrait UI and `NavigationRail` for tablet and
+  landscape UI.
+- Coroutines.
+- Local storage with Room.
+- MVVM pattern (ViewModel, repository, data sources).
+- WorkManager for background tasks.
 - Needs no special permissions on Android 6.0+.
 
 
