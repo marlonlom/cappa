@@ -38,7 +38,7 @@ object AppScaffoldUtil {
   fun canShowBottomBar(windowSizeClass: WindowSizeClass, isDetailDestination: Boolean) =
     !isDetailDestination && !windowSizeClass.isExpandedWidth
 
-  fun isTabletLandscape(wsc: WindowSizeClass) = !wsc.isCompactWidth and wsc.isMediumHeight
+  fun isTabletLandscape(wsc: WindowSizeClass) = wsc.isExpandedWidth and wsc.isMediumHeight
 
   fun isMobileLandscape(wsc: WindowSizeClass) = wsc.isExpandedWidth and wsc.isCompactHeight
 }
