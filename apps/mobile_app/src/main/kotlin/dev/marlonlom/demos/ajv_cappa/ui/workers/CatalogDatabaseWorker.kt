@@ -76,9 +76,7 @@ class CatalogDatabaseWorker(
         }
       }.flatten()
 
-    val defaultSettings: List<AppSetting> = defaultSettings(applicationContext).let { map ->
-      map.entries.map { entry -> AppSetting(entry.key, entry.value) }
-    }
+    val defaultSettings: List<AppSetting> = defaultSettings(applicationContext)
 
     val appDatabase = AppDatabase.getInstance(applicationContext)
     val localDataSource: LocalDataSource = LocalDataSourceImpl(appDatabase)
@@ -100,7 +98,9 @@ class CatalogDatabaseWorker(
     "privacy_policy" to applicationContext.getString(R.string.settings_link_privacy_policy),
     "terms_conditions" to applicationContext.getString(R.string.settings_link_privacy_policy),
     "personal_data_treatment_policy" to applicationContext.getString(R.string.settings_link_privacy_policy),
-  )
+  ).let { map ->
+    map.entries.map { entry -> AppSetting(entry.key, entry.value) }
+  }
 
   companion object {
     fun run(appContext: Context) {
