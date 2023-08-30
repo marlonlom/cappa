@@ -21,10 +21,6 @@
 
 package dev.marlonlom.demos.ajv_cappa.catalog.settings
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -32,31 +28,31 @@ import dev.marlonlom.demos.ajv_cappa.ui.theme.CappaTheme
 import org.junit.Rule
 import org.junit.Test
 
-internal class DarkThemeSettingSwitchUiTest {
+class PersonalDataPolicySettingMenuLinkUiTest {
 
   @get:Rule
   val composeTestRule = createComposeRule()
 
   @Test
-  fun shouldToggleDarkThemeSwitch() {
+  fun shouldClickThirdPartySoftwareSettingMenuLink() {
     composeTestRule.setContent {
-      var clicked by remember { mutableStateOf(false) }
 
       CappaTheme {
-        DarkThemeSettingSwitch(
+        PersonalDataPolicySettingMenuLink(
           CatalogSettingsRouteParams(
             uiState = CatalogSetting(
               appVersion = "1.0.0",
-              isAppInDarkTheme = clicked,
+              isAppInDarkTheme = false,
               isUsingDynamicColors = true,
               privacyPolicyUrl = "",
               termsConditionsUrl = "",
-              personalDataTreatmentPolicyUrl = ""
+              personalDataTreatmentPolicyUrl = "https://example.org/personal-data/"
             ),
-            openLicensesSectionAction = {},
-            openExternalUrlAction = {},
+            openLicensesSectionAction = { },
+            openExternalUrlAction = {
+              println("[openExternalUrlAction] url=$it")
+            },
             updateBooleanSettingAction = { a, b ->
-              clicked = b
               println("key=$a; flag=$b")
             },
           )
@@ -64,8 +60,7 @@ internal class DarkThemeSettingSwitchUiTest {
       }
     }
 
-    val onNodeWithText = composeTestRule.onNodeWithText("Dark theme")
-    onNodeWithText.assertExists().performClick()
+    composeTestRule.onNodeWithText("Personal data treatment policy").assertExists().performClick()
   }
 
 }
