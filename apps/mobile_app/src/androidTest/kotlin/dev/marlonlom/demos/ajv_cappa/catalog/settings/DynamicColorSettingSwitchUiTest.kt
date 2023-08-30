@@ -32,18 +32,18 @@ import dev.marlonlom.demos.ajv_cappa.ui.theme.CappaTheme
 import org.junit.Rule
 import org.junit.Test
 
-internal class DarkThemeSettingSwitchUiTest {
+internal class DynamicColorSettingSwitchUiTest {
 
   @get:Rule
   val composeTestRule = createComposeRule()
 
   @Test
-  fun shouldToggleDarkThemeSwitch() {
+  fun shouldToggleDynamicColorSwitch() {
     composeTestRule.setContent {
       var clicked by remember { mutableStateOf(false) }
 
       CappaTheme {
-        DarkThemeSettingSwitch(
+        DynamicColorsSettingSwitch(
           CatalogSettingsRouteParams(
             uiState = CatalogSetting(
               appVersion = "1.0.0",
@@ -64,7 +64,7 @@ internal class DarkThemeSettingSwitchUiTest {
       }
     }
 
-    val onNodeWithText = composeTestRule.onNodeWithText("Dark theme")
+    val onNodeWithText = composeTestRule.onNodeWithText("Dynamic colors")
     onNodeWithText.assertExists().performClick()
   }
 
